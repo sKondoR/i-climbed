@@ -9,7 +9,14 @@ export class Region {
   name!: string;
 
   @Column()
+  country!: string;
+
+  @Column()
+  season!: string;
+
+  @Column()
+  link!: string;
+
+  @Column()
   updatedAt: Date = new Date();
 }
-
-

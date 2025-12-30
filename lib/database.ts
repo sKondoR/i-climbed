@@ -11,14 +11,15 @@ export async function getDataSource(): Promise<DataSource> {
 
   try {
     AppDataSource = new DataSource({
-      type: 'mongodb',
-      url: process.env.MONGODB_URI,
-      database: process.env.MONGODB_DB_NAME || 'test',
-      entities: [Region],
-      synchronize: process.env.NODE_ENV === 'development',
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-      ssl: process.env.NODE_ENV === 'production',
+        type: 'mongodb',
+        url: process.env.MONGODB_URI,
+        database: process.env.MONGODB_DB_NAME || 'test',
+        entities: [Region],
+        synchronize: process.env.NODE_ENV === 'development',
+        logging: process.env.NODE_ENV === 'development',
+        // useNewUrlParser: true,
+        // useUnifiedTopology: true,
+        // ssl: process.env.NODE_ENV === 'production',
     });
 
     await AppDataSource.initialize();
