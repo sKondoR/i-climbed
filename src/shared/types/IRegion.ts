@@ -1,13 +1,14 @@
 export interface IRegion {
-    _id: string;
+    id: string;
+    uniqId?: string;
     name: string;
-    country: string;
-    season: string;
-    link: string;
-    updatedAt: Date;
+    country?: string;
+    season?: string;
+    link?: string;
+    updatedAt?: Date;
+    children?: IRegionNode[];
 }
 
 export type IRegionNode = IRegion & {
-  children?: IRegionNode[];
   isOpen?: boolean;
 };

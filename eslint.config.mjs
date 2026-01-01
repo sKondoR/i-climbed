@@ -13,6 +13,16 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  {
+    "rules": {
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": ["playwright*", "src/scraping/*"]
+        }
+      ]
+    }
+  }
 ]);
 
 export default eslintConfig;

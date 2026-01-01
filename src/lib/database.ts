@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import type { ObjectLiteral } from 'typeorm';
-import { Region } from '@/models/Region';
+import { Region, Place, Route, Sector } from '@/models';
 
 let AppDataSource: DataSource;
 
@@ -12,10 +12,14 @@ export async function getDataSource(): Promise<DataSource> {
 
   try {
     AppDataSource = new DataSource({
-        type: 'mongodb',
-        url: process.env.MONGODB_URI,
-        database: process.env.MONGODB_DB_NAME || 'test',
-        entities: [Region],
+        type: 'postgres',
+        host: process.env.POSTGRES_HOST,
+        port: Number(process.env.POSTGRES_PORT) | 5432,
+        url: process.env.POSTGRES_URL,
+        database: process.env.POSTGRES_DB_NAME,
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        entities: [Region, Place, Sector, Route],
         synchronize: process.env.NODE_ENV === 'development',
         logging: process.env.NODE_ENV === 'development',
         // useNewUrlParser: true,
@@ -35,11 +39,12 @@ export async function getDataSource(): Promise<DataSource> {
 // For Vercel serverless functions, initialize on demand
 export async function getDatabase() {
   const dataSource = await getDataSource();
-  dataSource.dropDatabase();
+  // dataSource.dropDatabase();
+  // await dataSource.synchronize(true);
   return {
     dataSource,
-    getMongoRepository: <T extends ObjectLiteral>(entity: new () => T) => {
-      return dataSource.getMongoRepository<T>(entity);
+    getRepository: <T extends ObjectLiteral>(entity: new () => T) => {
+      return dataSource.getRepository<T>(entity);
     },
   };
 }

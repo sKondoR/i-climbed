@@ -6,9 +6,9 @@ import {
   TETabs,
   TETabsItem,
 } from 'tw-elements-react';
-import { SEARCH_TABS } from '../../constants';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderTree, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { SEARCH_TABS } from '@/shared/constants/allclimb';
 
 export default function SearchTabs() {
   const pathname = usePathname();

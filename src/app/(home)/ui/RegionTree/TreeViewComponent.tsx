@@ -1,8 +1,6 @@
 'use client'
 import type { IRegionNode } from '@/shared/types/IRegion';
-// import { fetchRegionChildren } from '@/actions/fetchRegionChildren'; // Предполагаем, что такая функция существует
 import { useState } from 'react'; 
-import { fetchRegionChildren } from '@/actions/fetchRegionChildren';
 
 // Клиентский компонент для отображения дерева и обработки кликов
 export function TreeViewComponent({ data }: { data: IRegionNode[] }) {
@@ -12,16 +10,7 @@ export function TreeViewComponent({ data }: { data: IRegionNode[] }) {
     setTree(prev => {
       const toggleRecursive = (nodes: IRegionNode[]): IRegionNode[] => {
         return nodes.map(node => {
-          if (node._id.toString() === id) {
-            // Если дети ещё не загружены — загружаем
-            if (!node.children?.length || (node.children.length === 1 && !node.children[0].name)) {
-              // Показ заглушки до загрузки
-              fetchRegionChildren(id).then(children => {
-                setTree(prev =>
-                  prev.map(n => updateNodeChildren(n, id, children))
-                );
-              });
-            }
+          if (node.id === id) {
             return { ...node, isOpen: !node.isOpen };
           } else if (node.children?.length) {
             return { ...node, children: toggleRecursive(node.children) };
@@ -34,7 +23,7 @@ export function TreeViewComponent({ data }: { data: IRegionNode[] }) {
   };
 
   const updateNodeChildren = (node: IRegionNode, id: string, children: IRegionNode[]): IRegionNode => {
-    if (node._id.toString() === id) {
+    if (node.id === id) {
       return { ...node, children, isOpen: true };
     }
     if (node.children) {
@@ -51,10 +40,10 @@ export function TreeViewComponent({ data }: { data: IRegionNode[] }) {
     return (
       <ul className="ml-4">
         {nodes.map(node => (
-          <li key={node._id.toString()} className="mb-1">
+          <li key={node.id} className="mb-1">
             <div
-              onClick={() => toggleNode(node._id.toString())}
-              className="cursor-pointer font-medium hover:underline flex items-center"
+              onClick={() => toggleNode(node.id)}
+              className="cursor-pointer font-medium hover:text-orange-500 flex items-center"
             >
               {node.children?.length ? (
                 <span className="mr-1">
@@ -63,7 +52,7 @@ export function TreeViewComponent({ data }: { data: IRegionNode[] }) {
               ) : (
                 <span className="w-4 mr-1"></span>
               )}
-              {node.name}
+              {node?.country && `${node.country} - `}{node.name}
             </div>
             {node.isOpen && node.children && renderTree(node.children)}
           </li>
