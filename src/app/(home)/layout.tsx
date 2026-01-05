@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AnimatedTitle from "./ui/AnimatedTitle/AnimatedTitle";
 import { SearchTabs } from "./ui/SearchTabs";
+import { Climber } from "../ui/Climber";
 
 export const metadata: Metadata = {
   title: "Поиск по имени трассы на Allclimb",
@@ -16,6 +17,7 @@ export default function HomeLayout({
     <div className="m-auto sm:w-full md:w-3/4 relative">
       <AnimatedTitle />
       <SearchTabs />
+      <Climber />
       <div className="bg-white/60 backdrop-blur-md rounded-sm shadow-2xl transition-all duration-300 hover:shadow-3xl relative z-2">
         <div className="border-white/30 rounded-sm py-4 px-3 md:px-6 md:pt-16 hover:border-white/50 transition-colors overflow-hidden">
           {children}

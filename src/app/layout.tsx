@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import AnimatedBg from './ui/AnimatedBg/AnimatedBg';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import { AnimatedBg } from './ui/AnimatedBg';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
