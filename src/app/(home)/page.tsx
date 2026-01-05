@@ -4,6 +4,7 @@ import { SEARCH_TABS } from '@/shared/constants/allclimb';
 import { RoutesTree } from './ui/RoutesTree';
 import { fetchRegions } from '../actions/fetchRegions';
 import type { IRegion } from '@/shared/types/IRegion';
+import { PageDescription } from '../ui/PageDescription';
 
 export default async function Home(
   { searchParams }: { searchParams: { search?: string } }
@@ -14,6 +15,9 @@ export default async function Home(
   return (
     <>
       <div className="mt-3">
+        <PageDescription>
+          <div className="w-full text-right">поиск трасс, секторов и регионов с Allclimb</div>
+        </PageDescription>
         {isFirstTab ?  <SearchForm /> : <RoutesTree regions={regions} />}
       </div>
     </> 

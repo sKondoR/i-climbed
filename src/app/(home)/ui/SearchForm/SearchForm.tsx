@@ -1,22 +1,16 @@
 'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import useDebounce from '@/shared/hooks/useDebounce';
-import {
-  TEDropdown,
-  TEDropdownItem,
-} from 'tw-elements-react';
-
-// Update the result types to reflect objects with id and name
-type SearchResult = {
-  places: { id: string; name: string }[];
-  sectors: { id: string; name: string }[];
-  routes: { id: string; name: string }[];
-};
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SearchResults } from '../SearchResults';
+import type { FoundResults } from '../SearchResults/SearchResults.types';
 
 export default function SearchForm() {
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounce(query, 500);
-  const [results, setResults] = useState<SearchResult>({
+  const [results, setResults] = useState<FoundResults>({
     places: [],
     sectors: [],
     routes: [],
@@ -61,117 +55,40 @@ export default function SearchForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (debouncedQuery) {
+      fetchResults(debouncedQuery);
+    } else {
+      setResults({ places: [], sectors: [], routes: [] });
       setIsOpen(false);
     }
   };
 
-  const hasResults =
-    (results.places?.length > 0) || (results.sectors?.length > 0) || (results.routes?.length > 0);
-
-console.log('hasResults: ', hasResults, results, results.places && results.places.length > 0);
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 relative" ref={dropdownRef}>
-      <div>
-        <label htmlFor="search" className="sr-only">
-          Search query
-        </label>
+    <>
+    <form className="flex" ref={dropdownRef}>
+      <div className="grow mr-5 relative group">
         <input
           id="search"
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Enter your search..."
-          className="w-full rounded-md border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          placeholder="поиск..."
+          className="w-full rounded-md border-2 border-cyan-700 pl-12 pr-5 py-2 focus:border-pink-700 focus:outline-none"
           required
         />
-        {loading && <p className="text-sm text-gray-500 mt-1">Searching...</p>}
-
-        {/* Dropdown Results */}
-
-        <TEDropdown isOpen={isOpen && hasResults}>
-          {/* Places */}
-          {results.places.length > 0 && (
-            <div className="p-2">
-              <h3 className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Places
-              </h3>
-              <ul className="space-y-1">
-                {results.places.map((place) => (
-                  <li key={`place-${place.id}`}>
-                    <button
-                      type="button"
-                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded"
-                      onClick={() => {
-                        setQuery(place.name);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {place.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Sectors */}
-          {results.sectors.length > 0 && (
-            <div className="p-2 border-t border-gray-100">
-              <h3 className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Sectors
-              </h3>
-              <ul className="space-y-1">
-                {results.sectors.map((sector) => (
-                  <li key={`sector-${sector.id}`}>
-                    <button
-                      type="button"
-                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded"
-                      onClick={() => {
-                        setQuery(sector.name);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {sector.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Routes */}
-          {results.routes.length > 0 && (
-            <div className="p-2 border-t border-gray-100">
-              <h3 className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Routes
-              </h3>
-              <ul className="space-y-1">
-                {results.routes.map((route) => (
-                  <li key={`route-${route.id}`}>
-                    <button
-                      type="button"
-                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded"
-                      onClick={() => {
-                        setQuery(route.name);
-                        setIsOpen(false);
-                      }}
-                    >
-                      {route.name}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </TEDropdown>
+        <FontAwesomeIcon size="lg"
+          icon={loading ? faSpinner : faSearch}
+          className={`absolute text-cyan-700 group-focus-within:text-pink-700 top-[12px] left-[12px] ${loading ? 'animate-spin' : ''}`}
+        />
       </div>
 
       <button
-        type="submit"
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        type="button"
+        className="rounded-md bg-cyan-700 px-7 py-2 text-white transition-colors hover:bg-cyan-800 focus:outline-none cursor-pointer"
+        onClick={handleSubmit}
       >
         поиск
       </button>
     </form>
-  );
+    <SearchResults results={results} />
+  </>);
 }

@@ -17,32 +17,31 @@ export async function searchByName(query: string) {
   try {
     const [places, sectors, routes] = await Promise.all([
       placeRepo.createQueryBuilder('place')
-        .select(['place.id', 'place.name'])
+        .select(['place.id', 'place.name', 'place.link'])
         .where('LOWER(place.name) LIKE LOWER(:searchTerm)', { searchTerm })
         .getMany(),
 
       sectorRepo.createQueryBuilder('sector')
-        .select(['sector.id', 'sector.name'])
+        .select(['sector.id', 'sector.name', 'sector.link'])
         .where('LOWER(sector.name) LIKE LOWER(:searchTerm)', { searchTerm })
         .getMany(),
 
       routeRepo.createQueryBuilder('route')
-        .select(['route.id', 'route.name'])  // 'route.link
+        .select(['route.id', 'route.name', 'route.uniqId', 'route.sectorId', 'sector.link'])
+        .innerJoin('route.sector', 'sector')
         .where('LOWER(route.name) LIKE LOWER(:searchTerm)', { searchTerm })
         .getMany(),
     ]);
 
-    console.log('search: ');
-    console.log({
-      places,
-      sectors,
-      routes,
-    });
-
     return {
-      places: places.map(({ id, name }: { id: string, name: string }) => ({ id, name })),
-      sectors: sectors.map(({ id, name }: { id: string, name: string }) => ({ id, name })),
-      routes: routes.map(({ id, name }: { id: string, name: string }) => ({ id, name })),
+      places: places.map(({ id, name, link }: { id: string; name: string; link: string }) => ({ id, name, link })),
+      sectors: sectors.map(({ id, name, link }: { id: string; name: string; link: string }) => ({ id, name, link })),
+      routes: routes.map(({ id, name, uniqId, sector }) => ({
+        id,
+        name,
+        uniqId,
+        sectorLink: sector.link,
+      })),
     };
   } catch (error) {
     console.error('Ошибка поиска по имени: ', error);
