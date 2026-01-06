@@ -3,6 +3,7 @@ export interface IRoute {
     uniqId?: string;
     name: string;
     link?: string;
+    sectorLink?: string;
     sectorId?: string;
     grade?: string;
     author?: string;

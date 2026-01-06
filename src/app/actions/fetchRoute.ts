@@ -17,7 +17,6 @@ export async function fetchRoute<T extends keyof IRoute>(
     },
   });
 
-  console.log('>>> ', route);
   return route ? { ...route } : null;
 }
 

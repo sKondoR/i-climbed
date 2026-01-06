@@ -33,6 +33,12 @@ export class Route {
   @Column({ nullable: true })
   top?: string;
 
+  @Column({ nullable: true })
+  link?: string;
+
+  @Column({ nullable: true })
+  sectorLink?: string;
+
   @Column()
   @Index()
   sectorId!: string;

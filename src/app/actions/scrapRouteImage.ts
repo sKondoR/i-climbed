@@ -1,14 +1,31 @@
+'use server';
+
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
 import { chromium as plChromium } from 'playwright';
 import chromium from '@sparticuz/chromium';
+import type { IRoute } from '@/shared/types/IRoute';
+import { removeLastUrlSegment } from '@/shared/utils/removeLastUrlSegment';
 import { getDatabase } from '@/lib/database';
-import { Region } from '@/models';
+import { Image } from '@/models';
+import { fetchImage } from './fetchImage';
 
-export async function scrapRouteImage() {
+export async function scrapRouteImage(route: IRoute) {
   let browser;
   let context;
+ 
   try {
+    const existedImage = await fetchImage({ uniqId: route.uniqId });
+    console.log('existedImage', existedImage);
+    if (existedImage?.imageData) {
+      return {
+        ...existedImage,
+        imageData: Buffer.from(existedImage.imageData).toString('base64')
+      }
+    }
 
+    const { getRepository } = await getDatabase();
+    const imageRepo = getRepository(Image);
+    
     const executablePath = process.env.VERCEL 
         ? await chromium.executablePath()
         : plChromium.executablePath();
@@ -33,60 +50,88 @@ export async function scrapRouteImage() {
     });
     
     const page = await context.newPage();
-    
-    await page.goto(`${ALLCLIMB_URL}/guides`);
-    await page.waitForLoadState('networkidle');
 
-    const getApiResponse = async (fUrl: string) =>
-      await page.evaluate(async (url: string) => {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({})
+      // Блокировка ресурсов для ускорения
+      await page.route('**/*', (route) => {
+        const resourceType = route.request().resourceType();
+        // const blockedResources = ['image', 'stylesheet', 'font', 'media'];
+        const blockedResources: string[] = [];
+        if (blockedResources.includes(resourceType)) {
+          route.abort();
+        } else {
+          route.continue();
+        }
+      });
+
+      console.log('Переход на страницу сектора...');
+      // Переход на страницу с полем поиска
+      await page.goto(`${ALLCLIMB_URL}${route.link}`, {
+        waitUntil: 'domcontentloaded',
+        timeout: 10000,
+      });
+
+      const errorLocator = page.getByText(/Server Error \(500\)/);
+      if (await errorLocator.count()) {
+        const routeImg = await imageRepo.save({
+          uniqId: route.uniqId,
+          routeId: route.id,
+          error: 'Изображение трассы недоступно на AllClimb',
         });
-        return {
-          status: response.status,
-          data: await response.json()
-        };
-      },
-    fUrl);
-
-    const { data: { result } } = await getApiResponse(`${ALLCLIMB_URL}/guides/`);
-    const results = result ? result.map((el: any) => ({
-      ...el,
-      link: el.web_guide_link,
-      places: [],
-    })) : [];
-
-    const { getRepository } = await getDatabase();
-    const regionRepo = getRepository(Region);
-    // await regionRepo.clear();
-    await regionRepo.createQueryBuilder().delete().execute();
-
-    const placesDataPromises = [results[0]].map(async (place: any) => {
-      try {
-        const data = await fetch(`${ALLCLIMB_URL}/guides/${place.name}`);
-        console.log('place data:', data);
-        // Обновляем `places` у региона, если нужно
-        // place.places = Array.isArray(data?.result) ? data.result : [];
-      } catch (err) {
-        console.error(`Failed to fetch details for ${place.name}:`, err);
-        place.places = [];
+        return routeImg;
       }
-    });
 
-    // Дожидаемся всех запросов
-    await Promise.all(placesDataPromises);
-    
-    // Теперь можно обновить БД с данными о местах
-    await regionRepo.save(results); // повторное сохранение с обновлёнными `places`
+      const parsedImageUrl = await page.locator('.route-portrait img')
+        .getAttribute('src') || '';
 
-    // console.log('Browser fetch response:', results);
-    
-    return results;
-    
+      const imageUrl = parsedImageUrl
+        .replace('.JPG', '.jpg')
+        .replace('.JPEG', '.jpeg');
+      console.log(imageUrl);
+
+      // Возвращаемся на предыдущую страницу
+      await page.goto(`${ALLCLIMB_URL}${removeLastUrlSegment(route.link)?.replace('route', 'guides')}`, {
+        waitUntil: 'domcontentloaded',
+        timeout: 10000,
+      });
+
+      // Наведение на элемент
+      await page
+        .locator('.items-preview')
+        .filter({ hasText: route.name })
+        .first()
+        .hover();
+      // иногда ховер не успевает сработать без ожидания
+      await page.waitForTimeout(3000);
+
+      const format = imageUrl.includes('.jpg') ? '.jpg' : '.jpeg';
+      const imgLocator = page.locator(`img[src*="${imageUrl.split(format)[0]}${format}"]`);
+      const imgBox = await imgLocator.boundingBox();
+      if (!imgBox) {
+        throw new Error('Не удалось получить координаты изображения');
+      }
+      const screenshotBox = {
+        x: imgBox.x, 
+        y: imgBox.y,  
+        width: imgBox.width,
+        height: Math.max(1, imgBox.height - 20),
+      };
+
+      const screenshotBuffer = await page.screenshot({
+        // encoding: 'binary',
+        clip: screenshotBox,
+        type: 'jpeg',
+      });
+
+      const routeImg = await imageRepo.save({
+        uniqId: route.uniqId,
+        routeId: route.id,
+        imageData: screenshotBuffer,
+      });
+
+      return {
+        ...routeImg,
+        imageData: Buffer.from(routeImg.imageData).toString('base64')
+      }
   } catch (error) {
     console.error('Failed to capture screenshot:', error);
     throw new Error('Capture failed');

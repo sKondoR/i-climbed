@@ -84,13 +84,14 @@ export const prepareSectors = (data: { result?: any[]; }, id: string, uniqId: st
           uniqId: `${uniqId}/${r.name}`,
           name: r.name,
           link: r.web_guide_link,
+          sectorLink: r.web_guide_sector_link,
           sectorId: id,
           grade: removeTags(r.grade),
           author: r.author,
           bolts: r.bolts,
           type: removeTags(r.type),
           length: removeTags(r.bolts),
-          top: removeTags(r.type),
+          top: removeTags(r.top),
         }
         if (existingIndex === -1) {
           acc.push(route);
