@@ -5,7 +5,7 @@ import useDebounce from '@/shared/hooks/useDebounce';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SearchResults } from '../SearchResults';
-import type { FoundResults } from '../SearchResults/SearchResults.types';
+import type { FoundResults } from '@/shared/types/SearchResults';
 
 export default function SearchForm() {
   const [query, setQuery] = useState('');
