@@ -1,5 +1,7 @@
 import { getDatabase } from '@/lib/database';
-import { Place, Route, Sector } from '@/models';
+import { Place } from '@/models/Place';
+import { Sector } from '@/models/Sector';
+import { Route } from '@/models/Route';
 import type { FoundResults } from '../(home)/ui/SearchResults/SearchResults.types';
 
 export async function searchByName(query: string): Promise<FoundResults | []> {

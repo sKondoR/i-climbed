@@ -1,4 +1,6 @@
-import type { Place, Route, Sector } from '@/models';
+import { Place } from '@/models/Place';
+import { Sector } from '@/models/Sector';
+import { Route } from '@/models/Route';
 import { removeTags } from '@/shared/utils/removeTags';
 
 const extractNumRoutes = (str: string | number): number => {

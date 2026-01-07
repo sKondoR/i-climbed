@@ -1,7 +1,10 @@
 'use server';
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
 import { getDatabase } from '@/lib/database';
-import { Place, Region, Route, Sector } from '@/models';
+import { Region } from '@/models/Region';
+import { Place } from '@/models/Place';
+import { Sector } from '@/models/Sector';
+import { Route } from '@/models/Route';
 import { preparePlaces, prepareRoutes, prepareSectors } from './scrapRoutes-utils';
 import chunkArray from '@/shared/utils/chunkArray';
 import { formatDuration } from '@/shared/utils/formatDuration';

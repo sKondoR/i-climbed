@@ -1,6 +1,6 @@
 'use server';
 import { getDatabase } from '@/lib/database';
-import { Settings } from '@/models';
+import { Settings } from '@/models/Settings';
 import type { ISettings } from '@/shared/types/ISettings';
 
 export async function fetchSettings(): Promise<ISettings[]> {

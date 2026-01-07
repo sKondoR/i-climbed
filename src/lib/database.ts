@@ -1,7 +1,12 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import type { ObjectLiteral } from 'typeorm';
-import { Region, Place, Sector, Route, Image, Settings } from '@/models';
+import { Region  } from '@/models/Region';
+import { Place } from '@/models/Place';
+import { Sector } from '@/models/Sector';
+import { Route } from '@/models/Route';
+import { Image } from '@/models/Image';
+import { Settings } from '@/models/Settings';
 
 let AppDataSource: DataSource;
 

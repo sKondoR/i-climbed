@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Index } from 'typeorm';
-import { Route } from '@/models';
+import { Route } from '@/models/Route';
 
 @Entity()
 export class Image {

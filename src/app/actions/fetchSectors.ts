@@ -1,6 +1,6 @@
 'use server';
 import { getDatabase } from '@/lib/database';
-import { Sector } from '@/models';
+import { Sector } from '@/models/Sector';
 import type { ISector } from '@/shared/types/ISector';
 
 export async function fetchSectors<T extends keyof ISector>(whereParams: Partial<Record<T, ISector[T]>>): Promise<ISector[]> {

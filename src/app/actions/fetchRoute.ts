@@ -1,6 +1,6 @@
 'use server';
 import { getDatabase } from '@/lib/database';
-import { Route } from '@/models';
+import { Route } from '@/models/Route';
 import type { IRoute } from '@/shared/types/IRoute';
 
 export async function fetchRoute<T extends keyof IRoute>(
