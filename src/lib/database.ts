@@ -14,25 +14,27 @@ export async function getDataSource(): Promise<DataSource> {
   if (AppDataSource?.isInitialized) {
     return AppDataSource;
   }
-
+  const isProd = process.env.NODE_ENV === 'production';
+  const entitiesPath = isProd
+    ? [__dirname + '/../models/**/*.js' ]       // After build: use .js
+    : [
+        __dirname + '/../models/Settings.ts',
+        __dirname + '/../models/Region.ts',
+        __dirname + '/../models/Place.ts',
+        __dirname + '/../models/Sector.ts',
+        __dirname + '/../models/Route.ts',
+        __dirname + '/../models/Image.ts',
+      ];
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
         host: process.env.POSTGRES_HOST,
-        port: Number(process.env.POSTGRES_PORT) | 5432,
+        port: Number(process.env.POSTGRES_PORT) || 5432,
         url: process.env.POSTGRES_URL,
         database: process.env.POSTGRES_DB_NAME,
         username: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
-        entities: [
-          Settings,
-          Region,
-          Place,
-          Sector,
-          Route,
-          Image,
-           __dirname + '/../models/**/*.js'
-        ],
+        entities: entitiesPath,
         synchronize: process.env.NODE_ENV === 'development',
         logging: process.env.NODE_ENV === 'development',
         logger: 'simple-console',
