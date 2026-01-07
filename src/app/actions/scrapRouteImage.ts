@@ -15,7 +15,6 @@ export async function scrapRouteImage(route: IRoute) {
  
   try {
     const existedImage = await fetchImage({ uniqId: route.uniqId });
-    console.log('existedImage', existedImage);
     if (existedImage?.imageData) {
       return {
         ...existedImage,
