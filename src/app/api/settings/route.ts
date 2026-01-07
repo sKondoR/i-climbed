@@ -5,7 +5,7 @@ import { Settings } from '../../../models/Settings';
 export async function GET(request: NextRequest) {
   const { getRepository } = await getDatabase();
   const settingsRepo = getRepository(Settings);
-  
+  console.log('Settings', Settings);
   try {
     const settings = await settingsRepo.find({
       where: {},

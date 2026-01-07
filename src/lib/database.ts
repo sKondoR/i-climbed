@@ -16,15 +16,17 @@ export async function getDataSource(): Promise<DataSource> {
   }
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd
-    ? [__dirname + '/../models/*{.ts,.js}' ]       // After build: use .js
+    ? ['dist/models/*{.ts,.js}' ]       // After build: use .js
     : [
-        __dirname + '/../models/Settings.ts',
+        __dirname + '/..s/models/Settings.ts',
         __dirname + '/../models/Region.ts',
         __dirname + '/../models/Place.ts',
         __dirname + '/../models/Sector.ts',
         __dirname + '/../models/Route.ts',
         __dirname + '/../models/Image.ts',
+        // 'src/models/*.ts'
       ];
+      console.log('__dirname', __dirname);
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
@@ -56,6 +58,8 @@ export async function getDataSource(): Promise<DataSource> {
       console.error('Data source initialization failed', err)
       process.exit(1)
     });
+
+    console.log('Registered entities:', AppDataSource.entityMetadatas.map(e => e.name));
     console.log('Database connected successfully');
     return AppDataSource;
   } catch (error) {

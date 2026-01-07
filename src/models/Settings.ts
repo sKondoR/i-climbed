@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import type { ISettings } from '../shared/types/ISettings';
 
 @Entity('settings')
 export class Settings {
@@ -7,5 +6,16 @@ export class Settings {
   id!: number;
 
   @Column('json', { nullable: true })
-  scrapStats!: ISettings['scrapStats'];
+  scrapStats!: {
+    regions: number;
+    regionsErrors: number;
+    places: number;
+    placesErrors: number;
+    sectors: number;
+    sectorsErrors: number;
+    routes: number;
+    routesErrors?: number;
+    scrapDate: string;
+    scrapDuration?: string;
+};
 }
