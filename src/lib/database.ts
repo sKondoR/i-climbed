@@ -52,7 +52,7 @@ export async function getDataSource(): Promise<DataSource> {
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd ?
     [
-      './',
+      './server/',
       './.next/',
       './.next/standalone/',
       './.next/server/',
