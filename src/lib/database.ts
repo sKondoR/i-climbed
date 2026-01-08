@@ -16,17 +16,15 @@ export async function getDataSource(): Promise<DataSource> {
   }
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd
-    ? ['dist/models/*{.ts,.js}' ]       // After build: use .js
+    ? ['**/models/*.js' ]
     : [
-        __dirname + '/..s/models/Settings.ts',
-        __dirname + '/../models/Region.ts',
-        __dirname + '/../models/Place.ts',
-        __dirname + '/../models/Sector.ts',
-        __dirname + '/../models/Route.ts',
-        __dirname + '/../models/Image.ts',
-        // 'src/models/*.ts'
+        Settings,
+        Region,
+        Place,
+        Sector,
+        Route,
+        Image,
       ];
-      console.log('__dirname', __dirname);
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
@@ -37,10 +35,10 @@ export async function getDataSource(): Promise<DataSource> {
         username: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
         entities: entitiesPath,
-        synchronize: process.env.NODE_ENV === 'development',
-        logging: process.env.NODE_ENV === 'development',
+        synchronize: !isProd,
+        logging: !isProd,
         logger: 'simple-console',
-        ssl: process.env.NODE_ENV === 'production' ? { 
+        ssl: isProd ? { 
           rejectUnauthorized: false 
         } : false,
         extra: {
