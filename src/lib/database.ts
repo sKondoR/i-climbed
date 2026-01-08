@@ -50,11 +50,7 @@ export async function getDataSource(): Promise<DataSource> {
     return AppDataSource;
   }
   const isProd = process.env.NODE_ENV === 'production';
-  const entitiesPath = isProd ?
-    [
-      '**/models/*.js',
-    ]
-  : [
+  const entitiesPath = [
     TestEntity,
     Settings,
     Region,
@@ -68,13 +64,13 @@ export async function getDataSource(): Promise<DataSource> {
     // console.log('NODE_ENV:', process.env.NODE_ENV);
     // console.log('Current directory:', __dirname);
     // console.log('Process directory:', process.cwd());
-    console.log('entitiesPath:', isProd, entitiesPath);
-    [
-      './server/',
-      './.next/',
-      './.next/standalone/',
-      './.next/server/',
-    ].forEach(logFilesInDir);
+    // console.log('entitiesPath:', isProd, entitiesPath);
+    // [
+    //   './server/',
+    //   './.next/',
+    //   './.next/standalone/',
+    //   './.next/server/',
+    // ].forEach(logFilesInDir);
 
     // List files in entities directory
     // try {
