@@ -1,55 +1,59 @@
-import { closeDataSource, getDatabase } from '@/lib/database';
-import { Place } from '../../models/Place.entity';
-import { Sector } from '../../models/Sector.entity';
-import { Route } from '../../models/Route.entity';
+import { db } from '@/lib/db'; 
+import { places, sectors, routes } from '@/lib/db/schema'; 
 import type { FoundResults } from '@/shared/types/SearchResults';
+import { eq, ilike } from 'drizzle-orm';
 
 export async function searchByName(query: string): Promise<FoundResults | []> {
   if (!query || query.trim() === '') {
     return [];
   }
 
-  const { getRepository } = await getDatabase();
-
   const searchTerm = `%${query.trim()}%`;
 
-  const placeRepo = getRepository(Place);
-  const sectorRepo = getRepository(Sector);
-  const routeRepo = getRepository(Route);
-
   try {
-    const [places, sectors, routes] = await Promise.all([
-      placeRepo.createQueryBuilder('place')
-        .select(['place.id', 'place.name', 'place.uniqId', 'place.link'])
-        .where('LOWER(place.name) LIKE LOWER(:searchTerm)', { searchTerm })
-        .getMany(),
+    const [foundPlaces, foundSectors, foundRoutes] = await Promise.all([
+      // Search in places
+      db
+        .select({
+          id: places.id,
+          name: places.name,
+          uniqId: places.uniqId,
+          link: places.link,
+        })
+        .from(places)
+        .where(ilike(places.name, searchTerm)),
 
-      sectorRepo.createQueryBuilder('sector')
-        .select(['sector.id', 'sector.name', 'sector.uniqId', 'sector.link'])
-        .where('LOWER(sector.name) LIKE LOWER(:searchTerm)', { searchTerm })
-        .getMany(),
+      // Search in sectors
+      db
+        .select({
+          id: sectors.id,
+          name: sectors.name,
+          uniqId: sectors.uniqId,
+          link: sectors.link,
+        })
+        .from(sectors)
+        .where(ilike(sectors.name, searchTerm)),
 
-      routeRepo.createQueryBuilder('route')
-        .select(['route.id', 'route.name', 'route.uniqId', 'route.sectorId', 'sector.link'])
-        .innerJoin('route.sector', 'sector')
-        .where('LOWER(route.name) LIKE LOWER(:searchTerm)', { searchTerm })
-        .getMany(),
+      // Search in routes + join sector for link
+      db
+        .select({
+          id: routes.id,
+          name: routes.name,
+          uniqId: routes.uniqId,
+          sectorLink: sectors.link,
+        })
+        .from(routes)
+        .innerJoin(sectors, eq(routes.sectorId, sectors.id))
+        .where(ilike(routes.name, searchTerm)),
     ]);
 
     return {
-      places: places.map(({ id, name, uniqId, link }) => ({ id, name, uniqId, link })),
-      sectors: sectors.map(({ id, name, uniqId, link }) => ({ id, name, uniqId, link })),
-      routes: routes.map(({ id, name, uniqId, sector }) => ({
-        id,
-        name,
-        uniqId,
-        sectorLink: sector.link,
-      })),
+      places: foundPlaces,
+      sectors: foundSectors,
+      routes: foundRoutes,
     };
   } catch (error) {
     console.error('Ошибка поиска по имени: ', error);
     throw new Error('Ошибка поиска по имени');
-  } finally {
-    // await closeDataSource();
   }
 }

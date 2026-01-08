@@ -31,7 +31,7 @@ export const places = pgTable('places', {
   name: varchar('name', { length: 255 }).notNull(),
   numroutes: integer('numroutes').notNull(),
   link: text('link').notNull(),
-  regionId: varchar('region_id', { length: 255 }).notNull(),
+  regionId: integer('region_id').notNull(),
 });
 
 export const placesRelations = relations(places, ({ one }) => ({
@@ -50,7 +50,7 @@ export const sectors = pgTable('sectors', {
   name: varchar('name', { length: 255 }).notNull(),
   numroutes: integer('numroutes'),
   link: text('link'),
-  placeId: varchar('place_id', { length: 255 }).notNull(),
+  placeId: integer('place_id').notNull(),
 });
 
 export const sectorsRelations = relations(sectors, ({ one }) => ({
@@ -76,7 +76,7 @@ export const routes = pgTable('routes', {
   top: varchar('top', { length: 255 }),
   link: text('link'),
   sectorLink: text('sector_link'),
-  sectorId: varchar('sector_id', { length: 255 }).notNull(),
+  sectorId: integer('sector_id').notNull(),
 });
 
 export const routesRelations = relations(routes, ({ one }) => ({
@@ -94,7 +94,7 @@ export const images = pgTable('images', {
   uniqId: varchar('uniq_id', { length: 255 }),
   imageData: text('image_data').notNull(),
   error: text('error'),
-  routeId: varchar('route_id', { length: 255 }).notNull(),
+  routeId: integer('route_id').notNull(),
 });
 
 export const imageRelations = relations(images, ({ one }) => ({

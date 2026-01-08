@@ -14,3 +14,6 @@ export default {
       : { rejectUnauthorized: false },
   },
 } satisfies Config;
+
+
+// CREATE TABLE IF NOT EXISTS
