@@ -1,0 +1,112 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Index } from 'typeorm';
+let Route = class Route {
+    id;
+    uniqId;
+    name;
+    description;
+    author;
+    bolts;
+    type;
+    grade;
+    length;
+    top;
+    link;
+    sectorLink;
+    sectorId;
+    sector;
+};
+__decorate([
+    PrimaryGeneratedColumn(),
+    __metadata("design:type", String)
+], Route.prototype, "id", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Route.prototype, "uniqId", void 0);
+__decorate([
+    Column(),
+    __metadata("design:type", String)
+], Route.prototype, "name", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "description", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "author", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "bolts", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "type", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "grade", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "length", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "top", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "link", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Route.prototype, "sectorLink", void 0);
+__decorate([
+    Column(),
+    Index(),
+    __metadata("design:type", String)
+], Route.prototype, "sectorId", void 0);
+__decorate([
+    ManyToOne('Sector', (sector) => sector.children),
+    __metadata("design:type", Object)
+], Route.prototype, "sector", void 0);
+Route = __decorate([
+    Entity('routes')
+], Route);
+export { Route };
+// images: [
+//   {
+//     Routes: [{
+//       ascented_by_self: false
+//       ascents: 2
+//       author: "Шурупов Юрий"
+//       bolts: "Точек: <B>6</B>"
+//       creation_date: "2020 "
+//       grade: "<B>6b+</B>"
+//       info: "имеет общую станцию с трассой Чемодан"
+//       length: "Длина: <B>11</B>м."
+//       location: "Кампашка. Минусинский"
+//       name: "Ты мечта моя"
+//       top: "Станция: <B>Цепь</B>"
+//       type: "<span style=\"font-size: 12px\"><I>Спорт</I></span>"
+//       web_guide_link: "/ru/route/Минусинск/Кампашка/Минусинский/Ты мечта моя/"
+//       web_guide_sector_link: "/ru/guides/Минусинск/Кампашка/Минусинский/Ты мечта моя/"
+//     }],
+//     hash: "d383d97acc7247db88e564d6eacf120febe1530d_1.jpg",
+//     image: "https://d1bbd17bdaac68e4c34df4d7992c9394.r2.cloudflarestorage.com/allclimb-rr/storage/mdpi/d383d97acc7247db88e564d6eacf120febe1530d_1.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=1516ba7ebf2470fbbd0e4fac8eb4dce4%2F20260101%2F%2Fs3%2Faws4_request&X-Amz-Date=20260101T142201Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=01b44be4ed88ccba7892e287a126ba46044cdd5ef6ec09fc12927d4ff4556d8e",
+//     imagesize: [853, 1137]
+//   }
+// ]
+// spline: "e10450077f0234027f02380280023d028102430282024a028402520285025a028602620288026a02890273028a027b028b0283028b028b028c0292028b0298028b029e028b02a4028a02aa028902b0028802b6028702bc028602c2028502c7028302cd028202d2028002d7027f02dd027d02e2027b02e7027902eb027702f0027502f5027202f9027002fe026e0202036b02070369020b03660210036302150361021a035e021e035b0223035802280355022d03520232034f0237034b023c03480241034502460341024b033e0250033b02550338025b0334026003300265032d026b03290271032502770321027d031d0283031902880315028e03120292030f0297030d029a030b029e030902a0030802a1030702a2030602a3030602a3030602a3030602a2030602a2030602a1030602a1030602a0030702a003"
+// type:"<span style=\"font-size: 12px\"><I>Боулдер</I></span>"

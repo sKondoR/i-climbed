@@ -52,16 +52,7 @@ export async function getDataSource(): Promise<DataSource> {
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd ?
     [
-      './server/',
-      './.next/',
-      './.next/standalone/',
-      './.next/server/',
-      // __dirname,
-      // path.join(__dirname, 'dist/models/*.js'),
-      // path.join(__dirname, '.next/standalone/src/models/*.js'),
-      // path.join(process.cwd(), '.next/standalone/src/models/*.js'),
-      // path.join(process.cwd(), '.next/server/src/models/*.js'),
-
+      './models/*.js',
     ]
   : [
     TestEntity,
@@ -78,7 +69,12 @@ export async function getDataSource(): Promise<DataSource> {
     // console.log('Current directory:', __dirname);
     // console.log('Process directory:', process.cwd());
     console.log('entitiesPath:', isProd, entitiesPath);
-    entitiesPath.forEach(logFilesInDir);
+    [
+      './server/',
+      './.next/',
+      './.next/standalone/',
+      './.next/server/',
+    ].forEach(logFilesInDir);
 
     // List files in entities directory
     // try {
