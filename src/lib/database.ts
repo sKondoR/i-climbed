@@ -17,14 +17,7 @@ export async function getDataSource(): Promise<DataSource> {
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd
     // ? ['**/models/*.js' ]
-    ? [
-        Settings,
-        Region,
-        Place,
-        Sector,
-        Route,
-        Image,
-      ]
+    ? __dirname + '/models/*.js'
     : [
         Settings,
         Region,
@@ -33,6 +26,9 @@ export async function getDataSource(): Promise<DataSource> {
         Route,
         Image,
       ];
+
+  console.log('Current directory:', __dirname);
+  console.log('Entity paths:', entitiesPath);    
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
