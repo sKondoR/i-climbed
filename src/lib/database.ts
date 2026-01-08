@@ -19,7 +19,7 @@ export async function getDataSource(): Promise<DataSource> {
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd
     // ? ['**/models/*.js' ]
-    ? __dirname + '/models/*.js'
+    ? [path.join(process.cwd(), '.next/standalone/src/models/*.js')]
     : [
         Settings,
         Region,
