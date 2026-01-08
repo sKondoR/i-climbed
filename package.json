@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "build:models": "tsc --project tsconfig.models.json",
-    "copy:models": "shx mkdir -p .next/models && shx cp -r dist/models/. .next/models/",
+    "copy:models": "shx mkdir -p .next/server/models && shx cp -r dist/models/. .next/server/models/",
     "postbuild": "npm run build:models && npm run copy:models",
     "start": "next start",
     "lint": "eslint"
