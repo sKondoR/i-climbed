@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Index } from 'typeorm';
 
-@Entity()
+@Entity('place')
 export class Place {
   @PrimaryGeneratedColumn()
   id!: string;

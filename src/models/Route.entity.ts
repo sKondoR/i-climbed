@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, Index } from 'typeorm';
 
-@Entity()
+@Entity('route')
 export class Route {
   @PrimaryGeneratedColumn()
   id!: string;
