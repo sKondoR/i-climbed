@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { TestEntity } from '../models/TestEntity';
 import { Place } from '../models/Place';
 import { Region } from '../models/Region';
 import { Route } from '../models/Route';
@@ -17,38 +18,46 @@ export async function getDataSource(): Promise<DataSource> {
     return AppDataSource;
   }
   const isProd = process.env.NODE_ENV === 'production';
-  const entitiesPath = isProd
-    // ? ['**/models/*.js' ]
-    ? [path.join(process.cwd(), '.next/standalone/src/models/*.js')]
-    : [
-        Settings,
-        Region,
-        Place,
-        Sector,
-        Route,
-        Image,
-      ];
+  const entitiesPath = [
+    TestEntity,
+    Settings,
+    Region,
+    Place,
+    Sector,
+    Route,
+    Image,
+  ];
 
-    console.log('=== DATABASE DEBUG INFO ===');
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    console.log('Current directory:', __dirname);
-    console.log('Process directory:', process.cwd());
+    // console.log('=== DATABASE DEBUG INFO ===');
+    // console.log('NODE_ENV:', process.env.NODE_ENV);
+    // console.log('Current directory:', __dirname);
+    // console.log('Process directory:', process.cwd());
+    // console.log('entitiesPath:', entitiesPath);
 
     // List files in entities directory
-    try {
-      const modelsPath = path.join(__dirname, 'models');
-      console.log('Entity path:', modelsPath);
+    // try {
+    //   const modelsPath = path.join(__dirname, 'models');
+    //   console.log('Entity path:', modelsPath);
       
-      if (fs.existsSync(modelsPath)) {
-        const files = fs.readdirSync(modelsPath);
-        console.log('Entity files found:', files);
-      } else {
-        console.log('Entity directory does not exist!');
-      }
-    } catch (error) {
-      console.log('Error reading entity directory:', error);
-    }
+    //   if (fs.existsSync(modelsPath)) {
+    //     const files = fs.readdirSync(modelsPath);
+    //     console.log('Entity files found:', files);
+    //   } else {
+    //     console.log('Entity directory does not exist!');
+    //   }
+    // } catch (error) {
+    //   console.log('Error reading entity directory:', error);
+    // }
       
+    console.log('Entities being registered:', [
+      TestEntity,
+      Settings,
+      Region,
+      Place,
+      Sector,
+      Route,
+      Image,
+    ].map(e => e.name));
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
