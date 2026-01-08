@@ -7,6 +7,8 @@ import { Settings } from '../models/Settings';
 import { Image } from '../models/Image';
 import { DataSource } from 'typeorm';
 import type { ObjectLiteral } from 'typeorm';
+import path from 'path';
+import fs from 'fs';
 
 let AppDataSource: DataSource | null = null;
 
@@ -27,8 +29,27 @@ export async function getDataSource(): Promise<DataSource> {
         Image,
       ];
 
-  console.log('Current directory:', __dirname);
-  console.log('Entity paths:', entitiesPath);    
+    console.log('=== DATABASE DEBUG INFO ===');
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    console.log('Current directory:', __dirname);
+    console.log('Process directory:', process.cwd());
+
+    // List files in entities directory
+    try {
+      const modelsPath = path.join(__dirname, 'models');
+      console.log('Entity path:', modelsPath);
+      
+      if (fs.existsSync(modelsPath)) {
+        const files = fs.readdirSync(modelsPath);
+        console.log('Entity files found:', files);
+      } else {
+        console.log('Entity directory does not exist!');
+      }
+    } catch (error) {
+      console.log('Error reading entity directory:', error);
+    }
+      
+  const modelsPath = path.join(__dirname, 'models');  
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
@@ -38,7 +59,7 @@ export async function getDataSource(): Promise<DataSource> {
         database: process.env.POSTGRES_DB_NAME,
         username: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
-        entities: entitiesPath,
+        entities: modelsPath,
         synchronize: !isProd,
         logging: !isProd,
         logger: 'simple-console',
