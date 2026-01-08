@@ -3,6 +3,7 @@
   "include": ["src/models"],
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "noEmit": false
   }
 }
