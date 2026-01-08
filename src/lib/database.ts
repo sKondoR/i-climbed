@@ -52,7 +52,7 @@ export async function getDataSource(): Promise<DataSource> {
   const isProd = process.env.NODE_ENV === 'production';
   const entitiesPath = isProd ?
     [
-      './models/*.js',
+      '**/models/*.js',
     ]
   : [
     TestEntity,
@@ -100,6 +100,7 @@ export async function getDataSource(): Promise<DataSource> {
       Route,
       Image,
     ].map(e => e.name));
+    
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
