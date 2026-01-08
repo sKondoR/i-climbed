@@ -35,6 +35,8 @@ export async function getDataSource(): Promise<DataSource> {
     [
       './.next/standalone',
       './.next/server',
+      './src',
+      './dist',
       // __dirname,
       // path.join(__dirname, 'dist/models/*.js'),
       // path.join(__dirname, '.next/standalone/src/models/*.js'),
