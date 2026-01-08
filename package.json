@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "mkdir -p .next/standalone/src/models && cp -r src/models .next/standalone/src/models/ 2>/dev/null || echo 'Models copied'",
+    "postbuild": "tsc --project tsconfig.models.json && mkdir -p .next/standalone/src/models && cp -r dist/models/. .next/standalone/src/models/ && echo 'Compiled and copied models'",
     "start": "next start",
     "lint": "eslint"
   },
