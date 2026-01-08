@@ -11,6 +11,19 @@ import type { ObjectLiteral } from 'typeorm';
 import path from 'path';
 import fs from 'fs';
 
+function logFilesInDir(globPattern: any) {
+  const dirPath = globPattern.substring(0, globPattern.lastIndexOf('/'));
+  if (fs.existsSync(dirPath)) {
+    console.log(`\n📁 Contents of ${dirPath}:`);
+    const files = fs.readdirSync(dirPath);
+    files.forEach(file => {
+      console.log(`  └── ${file}`);
+    });
+  } else {
+    console.log(`\n🚫 Directory does not exist: ${dirPath}`);
+  }
+}
+
 let AppDataSource: DataSource | null = null;
 
 export async function getDataSource(): Promise<DataSource> {
@@ -40,7 +53,8 @@ export async function getDataSource(): Promise<DataSource> {
     // console.log('NODE_ENV:', process.env.NODE_ENV);
     // console.log('Current directory:', __dirname);
     // console.log('Process directory:', process.cwd());
-    // console.log('entitiesPath:', entitiesPath);
+    console.log('entitiesPath:', isProd, entitiesPath);
+    entitiesPath.forEach(logFilesInDir);
 
     // List files in entities directory
     // try {
