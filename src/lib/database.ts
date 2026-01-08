@@ -34,11 +34,15 @@ export async function getDataSource(): Promise<DataSource> {
   const entitiesPath = isProd ?
     [
       './.next/standalone',
-      __dirname,
-      path.join(__dirname, 'dist/models/*.js'),
-      path.join(__dirname, '.next/standalone/src/models/*.js'),
-      path.join(process.cwd(), '.next/standalone/src/models/*.js'),
-      path.join(process.cwd(), '.next/server/src/models/*.js'),
+      '.next/server',
+      'src/models',
+      '.next/standalone/src/models',
+      '.next/server/src/models',
+      // __dirname,
+      // path.join(__dirname, 'dist/models/*.js'),
+      // path.join(__dirname, '.next/standalone/src/models/*.js'),
+      // path.join(process.cwd(), '.next/standalone/src/models/*.js'),
+      // path.join(process.cwd(), '.next/server/src/models/*.js'),
 
     ]
   : [
