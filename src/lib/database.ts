@@ -49,7 +49,6 @@ export async function getDataSource(): Promise<DataSource> {
       console.log('Error reading entity directory:', error);
     }
       
-  const modelsPath = [path.join(__dirname, 'models')];  
   try {
     AppDataSource = new DataSource({
         type: 'postgres',
@@ -59,7 +58,7 @@ export async function getDataSource(): Promise<DataSource> {
         database: process.env.POSTGRES_DB_NAME,
         username: process.env.POSTGRES_USER,
         password: process.env.POSTGRES_PASSWORD,
-        entities: modelsPath,
+        entities: entitiesPath,
         synchronize: !isProd,
         logging: !isProd,
         logger: 'simple-console',
