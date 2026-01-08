@@ -40,7 +40,7 @@ export async function getDataSource(): Promise<DataSource> {
       path.join(process.cwd(), '.next/standalone/src/models/*.js'),
       path.join(process.cwd(), '.next/server/src/models/*.js'),
       path.join(__dirname, 'models/*.js'),
-      path.join(process.cwd(), 'src/models/*.js'),
+      path.join(process.cwd(), 'models/*.js'),
       path.join(process.cwd(), 'dist/models/*.js'),
     ]
   : [
