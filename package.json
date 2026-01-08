@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "tsc --project tsconfig.models.json && mkdir -p .next/models && cp -r dist/models/. .next/models/ && echo 'Compiled and copied models'",
+    "build:models": "tsc --project tsconfig.models.json",
+    "copy:models": "shx mkdir -p .next/models && shx cp -r dist/models/. .next/models/",
+    "postbuild": "npm run build:models && npm run copy:models",
     "start": "next start",
     "lint": "eslint"
   },
@@ -34,6 +36,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
+    "shx": "^0.4.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
