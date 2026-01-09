@@ -1,6 +1,6 @@
 'use client';
 
-import type { ISettings } from '@/shared/types/ISettings';
+import type { ISettings } from '@/lib/db/schema';
 import { useEffect, useState } from 'react';
 
 export default function ScrapStats() {
@@ -16,19 +16,30 @@ export default function ScrapStats() {
       load();
     }, []);
 
-    if(!settings.length) return;
+    if (!settings.length) return null;
+
+    const latestStats = settings[settings.length - 1].scrapStats;
+
+    if (!latestStats) {
+      return (
+        <div className="p-5 text-white/50 text-sm relative z-20">
+          Нет данных статистики
+        </div>
+      );
+    }
 
     const {
-        regions,
-        regionsErrors,
-        places,
-        placesErrors,
-        sectors,
-        sectorsErrors,
-        routes,
-        routesErrors,
-        scrapDate,
-    } = settings[settings.length - 1].scrapStats;
+      regions,
+      regionsErrors,
+      places,
+      placesErrors,
+      sectors,
+      sectorsErrors,
+      routes,
+      routesErrors,
+      scrapDate,
+    } = latestStats;
+
     return (
       <div className="p-5 text-white/50 text-sm relative z-20">
         <div className="grid grid-cols-3">
