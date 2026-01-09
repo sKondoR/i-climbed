@@ -49,7 +49,7 @@ const TreeNodeComponent: React.FC<{
           paddingLeft: `${(level + 1)* 24}px`,
         }}
       >
-        {hasChildren && (
+        {hasChildren && level < 3 && (
           <button
             type="button"
             onClick={handleToggle}
@@ -64,7 +64,7 @@ const TreeNodeComponent: React.FC<{
           </button>
         )}
         
-        {!hasChildren && (
+        {!(hasChildren && level < 3) && (
           <div style={{ width: '10px', display: 'inline-block' }} />
         )}
         
