@@ -5,14 +5,13 @@ import { useParams } from 'next/navigation';
 import { PageDescription } from '@/app/ui/PageDescription';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import type { IRoute } from '@/shared/types/IRoute';
-import { fetchRoute } from '@/app/actions/fetchRoute';
 import { RouteBadge } from '@/shared/ui/RouteBadge';
 import { getBeforeLastSlash } from '@/shared/utils/getBeforeLastSlash';
 import { getRegionFromRouteUniqId } from '@/shared/utils/getRegionFromRouteUniqId';
 import { scrapRouteImage } from '@/app/actions/scrapRouteImage';
-import type { IImage } from '@/shared/types/IImage';
 import EditImage from '@/shared/ui/EditImage/EditImage';
+import type { IImage, IRoute } from '@/lib/db/schema';
+import { RoutesService } from '@/lib/services/routes.service';
 
 type IState = 'found' | 'not-found' | 'loading';
 
@@ -27,7 +26,7 @@ export default function RoutePage() {
   useEffect(() => {
     try {
       async function load() {
-        const data = await fetchRoute({ id });
+        const data = await RoutesService.findOne(Number(id));
         if (data) {
           setRoute(data);
           setState('found');  

@@ -2,13 +2,13 @@ import { db } from '@/lib/db';
 import { regions } from '@/lib/db/schema';
 import { and, eq, ilike, asc } from 'drizzle-orm';
 
-export type RegionFilters = Partial<{
+export type RegionsFilters = Partial<{
   name: string;
 }>;
 
-export class RegionService {
-  // Find regions with filters
-  static async find(filters: RegionFilters = {}) {
+export class RegionsService {
+  // Поиск регионов по фильтру
+  static async find(filters: RegionsFilters = {}) {
     const conditions = [];
     if (filters.name) {
       conditions.push(ilike(regions.name, `%${filters.name}%`));
@@ -21,11 +21,11 @@ export class RegionService {
     return await db
       .select()
       .from(regions)
-      // .where(whereClause)
+      .where(whereClause)
       .orderBy(asc(regions.id));
   }
 
-  // Find one region by ID
+  // Поиск региона по id
   static async findOne(id: number) {
     const [region] = await db
       .select()

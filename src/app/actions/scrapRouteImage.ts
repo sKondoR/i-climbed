@@ -1,34 +1,30 @@
 'use server';
-
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
 import { chromium as plChromium } from 'playwright';
 import chromium from '@sparticuz/chromium';
-import type { IRoute } from '@/shared/types/IRoute';
 import { removeLastUrlSegment } from '@/shared/utils/removeLastUrlSegment';
-import { closeDataSource, getDatabase } from '@/lib/database';
-import { Image } from '../../models/Image.entity';
-import { fetchImage } from './fetchImage';
+import { ImagesService } from '@/lib/services/images.service';
 
-export async function scrapRouteImage(route: IRoute) {
+import { db } from '@/lib/db';
+import { images, type IImage, type IRoute } from '@/lib/db/schema';
+
+export async function scrapRouteImage(route: IRoute): Promise<IImage> {
   let browser;
   let context;
  
-  try {
-    const existedImage = await fetchImage({ uniqId: route.uniqId });
+try {
+    // Проверяем, есть ли уже изображение
+    const existedImage = await ImagesService.findOne(route.uniqId);
     if (existedImage?.imageData) {
-      return {
-        ...existedImage,
-        imageData: Buffer.from(existedImage.imageData).toString('base64')
-      }
+      return existedImage;
     }
 
-    const { getRepository } = await getDatabase();
-    const imageRepo = getRepository(Image);
-    
-    const executablePath = process.env.VERCEL 
-        ? await chromium.executablePath()
-        : plChromium.executablePath();
+    const executablePath = process.env.VERCEL
+      ? await chromium.executablePath()
+      : plChromium.executablePath();
+
     console.log(`Запускаем Playwright браузер (${executablePath})...`);
+
     browser = await plChromium.launch({
         executablePath,
         headless: false, // Используйте false для отладки
@@ -53,8 +49,7 @@ export async function scrapRouteImage(route: IRoute) {
       // Блокировка ресурсов для ускорения
       await page.route('**/*', (route) => {
         const resourceType = route.request().resourceType();
-        // const blockedResources = ['image', 'stylesheet', 'font', 'media'];
-        const blockedResources: string[] = [];
+        const blockedResources: string[] = []; // ['image', 'stylesheet', 'font', 'media'];
         if (blockedResources.includes(resourceType)) {
           route.abort();
         } else {
@@ -63,29 +58,36 @@ export async function scrapRouteImage(route: IRoute) {
       });
 
       console.log('Переход на страницу сектора...');
-      // Переход на страницу с полем поиска
       await page.goto(`${ALLCLIMB_URL}${route.link}`, {
         waitUntil: 'domcontentloaded',
         timeout: 10000,
       });
 
+      // Проверка на 500 ошибку
       const errorLocator = page.getByText(/Server Error \(500\)/);
       if (await errorLocator.count()) {
-        const routeImg = await imageRepo.save({
-          uniqId: route.uniqId,
-          routeId: route.id,
-          error: 'Изображение трассы недоступно на AllClimb',
-        });
-        return routeImg;
+        const [insertedImage] = await db
+          .insert(images)
+          .values({
+            uniqId: route.uniqId,
+            routeId: route.id,
+            imageData: '',
+            error: 'Изображение трассы недоступно на AllClimb',
+          })
+          .returning();
+
+        return {
+          ...insertedImage,
+          imageData: '',
+        };
       }
 
-      const parsedImageUrl = await page.locator('.route-portrait img')
-        .getAttribute('src') || '';
-
+      // Получаем URL изображения с портрета маршрута
+      const parsedImageUrl = (await page.locator('.route-portrait img').getAttribute('src')) || '';
       const imageUrl = parsedImageUrl
         .replace('.JPG', '.jpg')
         .replace('.JPEG', '.jpeg');
-      console.log(imageUrl);
+      console.log('Parsed image URL:', imageUrl);
 
       // Возвращаемся на предыдущую страницу
       await page.goto(`${ALLCLIMB_URL}${removeLastUrlSegment(route.link)?.replace('route', 'guides')}`, {
@@ -105,9 +107,11 @@ export async function scrapRouteImage(route: IRoute) {
       const format = imageUrl.includes('.jpg') ? '.jpg' : '.jpeg';
       const imgLocator = page.locator(`img[src*="${imageUrl.split(format)[0]}${format}"]`);
       const imgBox = await imgLocator.boundingBox();
+
       if (!imgBox) {
         throw new Error('Не удалось получить координаты изображения');
       }
+      
       const screenshotBox = {
         x: imgBox.x, 
         y: imgBox.y,  
@@ -121,15 +125,20 @@ export async function scrapRouteImage(route: IRoute) {
         type: 'jpeg',
       });
 
-      const routeImg = await imageRepo.save({
-        uniqId: route.uniqId,
-        routeId: route.id,
-        imageData: screenshotBuffer,
-      });
+      // Сохраняем в таблицу `images` через Drizzle
+      const [insertedImage] = await db
+        .insert(images)
+        .values({
+          uniqId: route.uniqId,
+          routeId: route.id,
+          imageData: screenshotBuffer.toString('base64'),
+          error: null,
+        })
+        .returning();
 
       return {
-        ...routeImg,
-        imageData: Buffer.from(routeImg.imageData).toString('base64')
+        ...insertedImage,
+        imageData: insertedImage.imageData
       }
   } catch (error) {
     console.error('Failed to capture screenshot:', error);

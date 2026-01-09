@@ -1,18 +1,17 @@
 'use server';
 
-import { fetchPlaces } from './fetchPlaces';
-import { fetchSectors } from './fetchSectors';
-import { fetchRoutes } from './fetchRoutes';
-// import type { IPlace, IRoute, ISector } from '@/lib/db/schema';
+import { RoutesService } from '@/lib/services/routes.service';
+import { SectorsService } from '@/lib/services/sectors.service';
+import { PlacesService } from '@/lib/services/places.service';
 
 const fetchTreeData = async (level: number, parentId: number | undefined) => {
   switch (level) {
     case 0:
-      return await fetchPlaces({ regionId: parentId });
+      return await PlacesService.find({ regionId: parentId });
     case 1:
-      return await fetchSectors({ placeId: parentId });
+      return await SectorsService.find({ placeId: parentId });
     case 2:
-      return await fetchRoutes({ sectorId: parentId });
+      return await RoutesService.find({ sectorId: parentId });
     default:
       throw new Error(`Unsupported level: ${level}`);
   }

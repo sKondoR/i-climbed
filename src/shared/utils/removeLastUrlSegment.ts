@@ -1,3 +1,3 @@
-export function removeLastUrlSegment(text?: string) {
+export function removeLastUrlSegment(text: string | null) {
   return text?.replace(/\/[^/]+\/?$/, '');
 }

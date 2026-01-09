@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { RegionService } from '@/lib/services/regions.service';
+import { RegionsService } from '@/lib/services/regions.service';
 
 export async function POST(request: NextRequest) {
   try {
     const filters = await request.json();
-    const regions = await RegionService.find(filters);
+    const regions = await RegionsService.find(filters);
     // console.log('✅ regions fetched:', regions);
     return NextResponse.json({
       success: true,

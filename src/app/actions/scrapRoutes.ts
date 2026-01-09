@@ -33,7 +33,11 @@ export async function scrapRoutes() {
           throw `${response.status} ${response.statusText}`;
         } else {
           const text = await response.text();
-          data = text ? JSON.parse(text) : {};
+          try {
+            data = text ? JSON.parse(text) : {};
+          } catch (e) {
+            console.log('JSON.parse(text) error: ', text);
+          }
         }
       } catch (e) {
         console.log('error: ', e);
@@ -97,7 +101,7 @@ export async function scrapRoutes() {
     }
 
     // Загрузка секторов
-    const BATCH_SIZE = 200;
+    const BATCH_SIZE = 50;
     const placeChunks = chunkArray(loadedPlaces, BATCH_SIZE);
     let loadedSectors: ISector[] = [];
 
@@ -115,7 +119,7 @@ export async function scrapRoutes() {
             fetchErrors.places.push(place.name);
           }
 
-          await new Promise((resolve) => setTimeout(resolve, 50));
+          await new Promise((resolve) => setTimeout(resolve, 200));
         })
       );
       await new Promise((resolve) => setTimeout(resolve, 300));
@@ -144,8 +148,8 @@ export async function scrapRoutes() {
           } catch (err) {
             fetchErrors.sectors.push(sector.name);
           }
-
-          await new Promise((resolve) => setTimeout(resolve, 50));
+          console.log('загрузка секторов, трасс: ', loadedRoutes.length);
+          await new Promise((resolve) => setTimeout(resolve, 200));
         })
       );
       await new Promise((resolve) => setTimeout(resolve, 300));

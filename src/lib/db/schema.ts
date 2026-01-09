@@ -92,7 +92,7 @@ export type IRoute = typeof routes.$inferSelect;
 export const images = pgTable('images', {
   id: serial('id').primaryKey(),
   uniqId: varchar('uniq_id', { length: 255 }),
-  imageData: text('image_data').notNull(),
+  imageData: text('data_base64').notNull(),
   error: text('error'),
   routeId: integer('route_id').notNull(),
 });
