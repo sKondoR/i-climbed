@@ -7,6 +7,7 @@ import { preparePlaces, prepareSectors, prepareRoutes } from './scrapRoutes-util
 import chunkArray from '@/shared/utils/chunkArray';
 import { formatDuration } from '@/shared/utils/formatDuration';
 import type { IPlace, IRoute, IScrapStats, ISector } from '@/lib/db/schema';
+import { SettingsService } from '@/lib/services/settings.service';
 
 interface FetchErrors {
   regions: string[];
@@ -176,14 +177,7 @@ export async function scrapRoutes() {
       трасс загружено: ${loadedRoutes.length}
     `);
 
-    // Обновление статистики в БД
-    await db
-      .insert(settings)
-      .values({ scrapStats: stats })
-      .onConflictDoUpdate({
-        target: settings.id,
-        set: { scrapStats: stats },
-      });
+    await SettingsService.updateScrapStats(stats);
 
     return stats;
   } catch (error) {

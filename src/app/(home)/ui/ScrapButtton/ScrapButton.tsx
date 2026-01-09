@@ -18,7 +18,7 @@ export default function ScrapButton() {
             `
         }
         onClick={handleScrap}
-        // disabled
+        disabled
     >
         скачать данные с Allclimb
     </button>

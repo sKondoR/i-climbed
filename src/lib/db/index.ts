@@ -4,6 +4,7 @@ import * as schema from './schema';
 
 const connectionString = process.env.POSTGRES_URL;
 
+console.log('connectionString', process.env.POSTGRES_URL);
 if (!connectionString) {
   throw new Error('POSTGRES_URL is required');
 }
