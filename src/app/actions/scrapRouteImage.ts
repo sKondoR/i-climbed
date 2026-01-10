@@ -7,6 +7,7 @@ import { ImagesService } from '@/lib/services/images.service';
 import { db } from '@/lib/db';
 import { images, type IImage, type IRoute } from '@/lib/db/schema';
 
+// require важно на vercel 
 const chromium = require('@sparticuz/chromium');
 
 export async function scrapRouteImage(route: IRoute): Promise<IImage> {
