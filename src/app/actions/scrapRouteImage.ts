@@ -28,7 +28,7 @@ try {
 
     browser = await plChromium.launch({
         executablePath,
-        headless: false, // Используйте false для отладки
+        headless: process.env.NODE_ENV === "production", // Используйте false для отладки
         args: [
           '--no-sandbox',                    // Отключает sandbox-защиту Chromium. Полезно в изолированных средах (например, Docker), где sandbox может вызывать проблемы. ⚠️ Опасно в ненадёжных окружениях.
           '--disable-setuid-sandbox',        // Отключает setuid sandbox, который иногда несовместим с контейнерами.
