@@ -64,7 +64,6 @@ export default function ScrapStats() {
       </div>
     );
     } catch (error) {
-    console.error('Failed to load ScrapStats:', error);
     return (
       <div className="p-5 text-white/50 text-sm relative z-20">
         Ошибка загрузки статистики

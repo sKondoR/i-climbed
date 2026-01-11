@@ -45,7 +45,7 @@ export default function RoutePageContent({ route }: { route: IRoute }) {
     <>
       <div className="mt-3">
         <PageDescription>
-          {route?.grade ? <RouteBadge grade={route.grade} /> : null}
+          {route?.grade ? <div><RouteBadge grade={route.grade} /></div> : null}
           <div className="grow ml-3">
             <h2 className="text-2xl md:text-3xl text-pink-700">{route?.name}</h2>
             <div>{getBeforeLastSlash(route?.uniqId)}</div>
@@ -69,15 +69,16 @@ export default function RoutePageContent({ route }: { route: IRoute }) {
             </div>
           : image?.error}
         </div>
-        <div className="flex justify-center mt-3">
+        {image?.imageData ? <div className="flex justify-center mt-3">
           <button
             type="button"
             className="rounded-md bg-cyan-700 px-7 py-2 text-white transition-colors hover:bg-cyan-800 focus:outline-none cursor-pointer"
             onClick={reloadImage}
           >
-            перезагрузить изображение
+            обновить изображение
           </button>
         </div>
+        : null}
       </div>
     </>
   );

@@ -16,9 +16,9 @@ export async function scrapRouteImage(route: IRoute, isUpdate: boolean): Promise
  
 try {
 
+    const existedImage = await ImagesService.findOne(route.uniqId);
     if (!isUpdate) {
       // Проверяем, есть ли уже изображение
-      const existedImage = await ImagesService.findOne(route.uniqId);
       if (existedImage?.imageData) {
         return existedImage;
       }      
@@ -129,22 +129,9 @@ try {
         clip: screenshotBox,
         type: 'jpeg',
       });
-
-      // Сохраняем в таблицу `images` через Drizzle
-      const [insertedImage] = await db
-        .insert(images)
-        .values({
-          uniqId: route.uniqId,
-          routeId: route.id,
-          imageData: screenshotBuffer.toString('base64'),
-          error: null,
-        })
-        .returning();
-
-      return {
-        ...insertedImage,
-        imageData: insertedImage.imageData
-      }
+      const base64Image = screenshotBuffer.toString('base64');
+      const image = ImagesService.updateOrCreate(existedImage, route, base64Image);
+      return image;
   } catch (error) {
     console.error('Failed to capture screenshot:', error);
     throw new Error('Capture failed');

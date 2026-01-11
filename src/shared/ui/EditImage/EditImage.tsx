@@ -147,7 +147,7 @@ const EditImage = ({
             aria-label={`скачать изображение`}
         />
       </div>
-      <div className="flex justify-center overflow-scroll">
+      <div className="flex justify-center overflow-auto">
         <canvas
             ref={canvasRef}
             style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
