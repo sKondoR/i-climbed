@@ -14,7 +14,7 @@ export default function SearchResults({ results }: { results: FoundResults }) {
         {results.routes.length > 0 && (
           <div className="">
             <h3 className="text-lg text-pink-700 uppercase tracking-wider border-b-2 border-pink-700 mb-3">
-              Трассы
+              Трассы ({results.routes.length})
             </h3>
             <ul className="space-y-2">
               {results.routes.map((route) => (
@@ -36,7 +36,7 @@ export default function SearchResults({ results }: { results: FoundResults }) {
         {results.places.length > 0 && (
           <div className="mb-5">
             <h3 className="text-lg text-pink-700 uppercase tracking-wider border-b-2 border-pink-700 mb-3">
-              Места в регионах
+              Места в регионах ({results.places.length})
             </h3>
             <ul className="space-y-1">
               {results.places.map((place) => (
@@ -57,7 +57,7 @@ export default function SearchResults({ results }: { results: FoundResults }) {
         {results.sectors.length > 0 && (
           <div>
             <h3 className="text-lg text-pink-700 uppercase tracking-wider border-b-2 border-pink-700 mb-3">
-              Сектора
+              Сектора ({results.sectors.length})
             </h3>
             <ul className="space-y-1">
               {results.sectors.map((sector) => (

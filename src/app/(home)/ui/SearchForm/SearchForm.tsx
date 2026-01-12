@@ -34,6 +34,7 @@ export default function SearchForm() {
     search(value);
   };
 
+  const isNoResults = query?.trim().length > 3 && !loading && !results?.places.length && !results?.sectors.length && !results?.routes.length;
   return (
     <>
       <form onSubmit={handleSubmit} className="flex">
@@ -62,7 +63,8 @@ export default function SearchForm() {
         </button>
       </form>
       <SearchResults results={results} />
-      {error && <div className="text-red-800">{error}</div>}
+      {error ? <div className="text-red-800">{error}</div> : null} 
+      {isNoResults  ? <div className="text-red-800">по "{query.trim()}" ничего не найденно</div> : null}
     </>
   );
 }
