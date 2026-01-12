@@ -34,7 +34,7 @@ export default function SearchForm() {
     search(value);
   };
 
-  const isNoResults = query?.trim().length > 3 && !loading && !results?.places.length && !results?.sectors.length && !results?.routes.length;
+  const isNoResults = query?.trim().length >= 3 && !loading && !results?.places.length && !results?.sectors.length && !results?.routes.length;
   return (
     <>
       <form onSubmit={handleSubmit} className="flex">
