@@ -6,6 +6,7 @@ import { ImagesService } from '@/lib/services/images.service';
 
 import { db } from '@/lib/db';
 import { images, type IImage, type IRoute } from '@/lib/db/schema';
+import { getImageFormat } from './scrapRoutes-utils';
 
 // require важно на vercel 
 const chromium = require('@sparticuz/chromium');
@@ -89,9 +90,9 @@ try {
 
       // Получаем URL изображения с портрета маршрута
       const parsedImageUrl = (await page.locator('.route-portrait img').getAttribute('src')) || '';
-      const imageUrl = parsedImageUrl
-        .replace('.JPG', '.jpg')
-        .replace('.JPEG', '.jpeg');
+      const imageUrl = parsedImageUrl;
+        // .replaceAll('.JPG', '.jpg')
+        // .replaceAll('.JPEG', '.jpeg');
       console.log('Parsed image URL:', imageUrl);
 
       // Возвращаемся на предыдущую страницу
@@ -118,7 +119,10 @@ try {
         `,
       });
 
-      const format = imageUrl.includes('.jpg') ? '.jpg' : '.jpeg';
+      const format = getImageFormat(imageUrl);
+      if (!format) {
+        throw new Error('Не удалось получить формат изображения');
+      }
       const imgLocator = page.locator(`img[src*="${imageUrl.split(format)[0]}${format}"]`);
       const imgBox = await imgLocator.boundingBox();
 

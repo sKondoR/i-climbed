@@ -104,3 +104,9 @@ export const prepareSectors = (data: { result?: any[]; }, id: number, uniqId: st
       return acc;
     }, [] as IRoute[])
   : [];
+
+export function getImageFormat(url: string) {
+  const match = url.match(/\.([a-zA-Z0-9]+)(?:[?#]|$)/);
+  if (!match) return null;
+  return match[1];
+}
