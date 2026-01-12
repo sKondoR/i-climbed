@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react';
 import RecursiveTree from './Tree';
 import type { IRegion } from '@/lib/db/schema';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-export default function TreeTest() {
+export default function TreeWrapper() {
   const [regions, setRegions] = useState<IRegion[]>([]);
 
   useEffect(() => {
-    if (regions.length) return;
     const load = async function () {
       const res = await fetch('/api/regions', {
         method: 'POST',
@@ -25,7 +26,9 @@ export default function TreeTest() {
       const { data } = await res.json();
       setRegions(data);
     }
-    load();
+    if (!regions.length) {
+      load();
+    }
   }, [regions.length]);
   
   const initialTreeData = regions.map((region) => ({
@@ -38,9 +41,15 @@ export default function TreeTest() {
 
   return (
     <>
+    {initialTreeData.length > 0 ? (
       <RecursiveTree 
         initialData={initialTreeData}
-      />
-    </>
+      />) : (
+        <div className="text-center"><FontAwesomeIcon size="lg"
+            icon={faSpinner}
+            className={`text-cyan-700 animate-spin`}
+        /> загрузка данных</div> 
+      )}
+    </>    
   );
 }

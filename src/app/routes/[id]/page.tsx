@@ -1,5 +1,5 @@
 import { RoutesService } from '@/lib/services/routes.service';
-import RoutePageContent from './ui/RoutePageContent/RoutePagecontent';
+import RoutePageContent from './ui/RoutePageContent/RoutePageСontent';
 import { notFound } from 'next/navigation';
 
 export default async function RoutePage({ params }: { params: { id: string } }) {
