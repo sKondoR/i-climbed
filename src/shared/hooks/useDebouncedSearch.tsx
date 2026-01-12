@@ -1,54 +1,70 @@
 import { useState, useEffect, useRef } from 'react';
+import type { FoundResults } from '../types/SearchResults';
 
-export function useDebouncedSearch(apiFunction: any, delay = 300) {
-  const [results, setResults] = useState(null);
+const initSearchValue = {
+  places: [],
+  sectors: [],
+  routes: [],
+};
+
+export function useDebouncedSearch(apiFunction: (query: string, options?: any) => Promise<FoundResults>, delay = 300) {
+  const [results, setResults] = useState<FoundResults>(initSearchValue);
   const [loading, setLoading] = useState(false);
-  const [error, setError] =  useState<string | null>(null);
-  
-  // Store the AbortController for the current request
-  const abortControllerRef = useRef<AbortController | null>(null);;
+  const [error, setError] = useState<string | null>(null);
 
-  const search = async (query: string) => {
-    // Cancel the previous request if it exists
-    if (abortControllerRef.current?.abort) {
-      abortControllerRef.current.abort();
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const search = (query: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
     }
 
-    // Create new AbortController for this request
-    abortControllerRef.current = new AbortController();
-    
-    if (!query || query.trim() === '') {
-      setResults(null);
-      return;
-    }
-
+     console.log('>0 true ', query)
     setLoading(true);
     setError(null);
 
-    try {
-      const data = await apiFunction(query, {
-        signal: abortControllerRef.current.signal
-      });
-      setResults(data);
-    } catch (err) {
-      // Only set error if it's not an abort error
-      if (err instanceof Error) {
-        if (err.name !== 'AbortError') {
-          setError(err.message);
-          console.error('Search error:', err);
-        }
-      } else {
-        setError('An unexpected error occurred');
-        console.error('Unknown error:', err);
-      }
-    } finally {
-      setLoading(false);
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
+
+    if (!query || query.trim().length < 3) {
+      setResults(initSearchValue);
+      console.log('>1 false ', query)
+      setLoading(false);
+      return;
+    }
+
+    timeoutRef.current = setTimeout(async () => {
+      abortControllerRef.current = new AbortController();
+
+      try {
+        const data = await apiFunction(query, {
+          signal: abortControllerRef.current.signal,
+        });
+        setResults(data);
+        setLoading(false);
+      } catch (err) {
+        if (err instanceof Error) {
+          if (err.name !== 'AbortError') {
+            setError(err.message);
+            setLoading(false);
+            console.error('Search error:', err);
+          }
+        } else {
+          setError('An unexpected error occurred');
+          console.error('Unknown error:', err);
+        }
+      } finally {
+      }
+    }, delay);
   };
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
