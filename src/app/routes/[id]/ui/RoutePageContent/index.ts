@@ -1,1 +1,1 @@
-export { default as RoutePageContent } from './RoutePageContent1';
+export { default as RoutePageContent } from './RoutePageContent';
