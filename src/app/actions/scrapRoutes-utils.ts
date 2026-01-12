@@ -105,8 +105,12 @@ export const prepareSectors = (data: { result?: any[]; }, id: number, uniqId: st
     }, [] as IRoute[])
   : [];
 
-export function getImageFormat(url: string) {
-  const match = url.match(/\.([a-zA-Z0-9]+)(?:[?#]|$)/);
+export function getImageFormat(url: string): 'jpg' | 'jpeg' | 'JPG' | 'JPEG' | null {
+  const match = url.match(/\.(jpg|jpeg|JPG|JPEG)(?:[?#]|$)/);
   if (!match) return null;
-  return match[1];
+
+  const ext = match[1];
+  const validFormats: Array<'jpg' | 'jpeg' | 'JPG' | 'JPEG'> = ['jpg', 'jpeg', 'JPG', 'JPEG'];
+
+  return validFormats.includes(ext as any) ? (ext as 'jpg' | 'jpeg' | 'JPG' | 'JPEG') : null;
 }

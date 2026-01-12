@@ -46,7 +46,7 @@ try {
     }); 
 
     context = await browser.newContext({
-      viewport: { width: 1280, height: 800 },
+      viewport: { width: 1500, height: 800 },
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
     });
     
@@ -124,6 +124,8 @@ try {
         throw new Error('Не удалось получить формат изображения');
       }
       const imgLocator = page.locator(`img[src*="${imageUrl.split(format)[0]}${format}"]`);
+      await imgLocator.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(1000); 
       const imgBox = await imgLocator.boundingBox();
 
       if (!imgBox) {
