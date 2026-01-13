@@ -1,1 +1,1 @@
-export { default as RoutesTree } from './TreeWrapper';
+export { default as RoutesTree } from './Tree';
