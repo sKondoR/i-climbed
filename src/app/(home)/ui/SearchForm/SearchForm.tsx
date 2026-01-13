@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SearchResults } from '../SearchResults';
 import { useSearch } from '@/shared/hooks/useSearch';
+import { MIN_SEARCH_LENGTH } from '@/shared/constants/search.constants';
 
 
 export default function SearchForm() {
@@ -21,7 +22,7 @@ export default function SearchForm() {
     setQuery(value);
   };
 
-  const isNoResults = term?.trim().length >= 3
+  const isNoResults = term?.trim().length >= MIN_SEARCH_LENGTH
     && term.trim() === query.trim()
     && !isError
     && !isLoading

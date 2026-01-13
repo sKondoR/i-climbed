@@ -1,5 +1,4 @@
-
-import { searchByName } from '@/app/actions/searchByName';
+import { SearchService } from '@/lib/services/search.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -21,7 +20,7 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    const results = await Promise.race([searchByName(query), abortPromise]);
+    const results = await Promise.race([SearchService.searchByName(query), abortPromise]);
     return NextResponse.json(results);
   } catch (error) {
     if (error instanceof Error && error.message === 'Request aborted') {
