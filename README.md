@@ -8,4 +8,4 @@
 
 <br><br>
 ## Стэк
-nextjs, react, drizzle orm, tailwindcss, playwright
+NextJS, React, React Query, Drizzle ORM, TailwindCSS, Playwright

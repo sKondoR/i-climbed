@@ -1,12 +1,11 @@
 import { getBeforeLastSlash } from '@/shared/utils/getBeforeLastSlash';
 import { AllclimbLink } from '@/shared/ui/AllclimbLink';
-import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
 import type { FoundResults } from '@/shared/types/SearchResults.types';
 
 export default function SearchResults({ results }: { results: FoundResults }) {
+  if (!results) return null;
   const hasResults =
     (results.places?.length > 0) || (results.sectors?.length > 0) || (results.routes?.length > 0);
-
   if (!hasResults) return null;
   return (
     <div className="flex mt-5 gap-10">

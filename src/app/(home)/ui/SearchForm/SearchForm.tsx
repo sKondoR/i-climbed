@@ -1,40 +1,27 @@
 'use client';
 
-import { useState } from 'react';
+import { useState } from 'react'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SearchResults } from '../SearchResults';
-import { useDebouncedSearch } from '@/shared/hooks/useDebouncedSearch';
+import { useSearch } from '@/shared/hooks/useSearch';
 
-async function searchAPI(query: string, options = {}) {
-  const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
-    ...options,
-    method: 'GET',
-  });
-
-  if (!response.ok) {
-    throw new Error('Search failed');
-  }
-
-  return response.json();
-}
 
 export default function SearchForm() {
   const [query, setQuery] = useState('');
-  const { results, loading, error, search } = useDebouncedSearch(searchAPI);
+
+  const { data: results, isLoading, isError } = useSearch(query);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    search(query);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setQuery(value);
-    search(value);
   };
 
-  const isNoResults = query?.trim().length >= 3 && !loading && !results?.places.length && !results?.sectors.length && !results?.routes.length;
+  const isNoResults = query?.trim().length >= 3 && !isLoading && !results?.places.length && !results?.sectors.length && !results?.routes.length;
   return (
     <>
       <form onSubmit={handleSubmit} className="flex">
@@ -50,8 +37,8 @@ export default function SearchForm() {
           />
           <FontAwesomeIcon
             size="lg"
-            icon={loading ? faSpinner : faSearch}
-            className={`absolute text-cyan-700 group-focus-within:text-pink-700 top-[12px] left-[12px] ${loading ? 'animate-spin' : ''}`}
+            icon={isLoading ? faSpinner : faSearch}
+            className={`absolute text-cyan-700 group-focus-within:text-pink-700 top-[12px] left-[12px] ${isLoading ? 'animate-spin' : ''}`}
           />
         </div>
 
@@ -63,7 +50,7 @@ export default function SearchForm() {
         </button>
       </form>
       <SearchResults results={results} />
-      {error ? <div className="text-red-800">{error}</div> : null} 
+      {isError ? <div className="text-red-800">ошибка при поиске</div> : null} 
       {isNoResults  ? <div className="text-red-800">по "{query.trim()}" ничего не найденно</div> : null}
     </>
   );

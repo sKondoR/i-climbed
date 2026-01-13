@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import '@fortawesome/fontawesome-svg-core/styles.css';
+import Providers from './providers';
 import { AnimatedBg } from './ui/AnimatedBg';
 import { ScrapStats } from '@/shared/ui/ScrapStats';
 import ScrapButton from './(home)/ui/ScrapButtton/ScrapButton';
@@ -33,25 +34,27 @@ export default function RootLayout({
           flex flex-col items-center
         `}
       >
-        <AnimatedBg />
-        <div
-          className="fixed h-screen inset-0 -z-2 bg-cover bg-center bg-fixed opacity-30"
-          style={{
-            backgroundImage: "url('/images/bg5.jpg')",
-            
-          }}
-        ></div>
-        <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-10 left-20 w-32 h-32 rounded-full bg-white/10 ipulse" style={{ animationDelay: '0s' }}></div>
-            <div className="absolute top-2/3 right-1/4 w-24 h-24 rounded-full bg-white/10 ipulse" style={{ animationDelay: '3s' }}></div>
-            <div className="absolute bottom-20 left-1/4 w-20 h-20 rounded-full bg-white/10 ipulse" style={{ animationDelay: '5s' }}></div>
-            <div className="absolute top-1/4 right-20 w-12 h-12 rounded-full bg-white/10 ipulse" style={{ animationDelay: '8s' }}></div>
-        </div>
-        <div className="w-full mins-w-screen grow p-3 md:p-15 relative z-10">
-          {children}
-        </div>
-        <ScrapStats />
-        {process.env.NODE_ENV === 'development' && (<ScrapButton />)}
+        <Providers>
+          <AnimatedBg />
+          <div
+            className="fixed h-screen inset-0 -z-2 bg-cover bg-center bg-fixed opacity-30"
+            style={{
+              backgroundImage: "url('/images/bg5.jpg')",
+              
+            }}
+          ></div>
+          <div className="absolute inset-0 overflow-hidden">
+              <div className="absolute top-10 left-20 w-32 h-32 rounded-full bg-white/10 ipulse" style={{ animationDelay: '0s' }}></div>
+              <div className="absolute top-2/3 right-1/4 w-24 h-24 rounded-full bg-white/10 ipulse" style={{ animationDelay: '3s' }}></div>
+              <div className="absolute bottom-20 left-1/4 w-20 h-20 rounded-full bg-white/10 ipulse" style={{ animationDelay: '5s' }}></div>
+              <div className="absolute top-1/4 right-20 w-12 h-12 rounded-full bg-white/10 ipulse" style={{ animationDelay: '8s' }}></div>
+          </div>
+          <div className="w-full mins-w-screen grow p-3 md:p-15 relative z-10">
+            {children}
+          </div>
+          <ScrapStats />
+          {process.env.NODE_ENV === 'development' && (<ScrapButton />)}
+        </Providers>
       </body>
     </html>
   );
