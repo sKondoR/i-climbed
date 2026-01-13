@@ -1,5 +1,5 @@
 'use server';
-import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
+import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
 import { chromium as plChromium } from 'playwright';
 import { removeLastUrlSegment } from '@/shared/utils/removeLastUrlSegment';
 import { ImagesService } from '@/lib/services/images.service';

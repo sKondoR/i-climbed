@@ -1,4 +1,4 @@
-import { GRADES_COLORS } from "@/shared/constants/allclimb";
+import { GRADES_COLORS } from "@/shared/constants/allclimb.constants";
 
 type IRouteBadge = {
   grade: string;

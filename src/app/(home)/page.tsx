@@ -1,6 +1,6 @@
 
 import { SearchForm } from './ui/SearchForm';
-import { SEARCH_TABS } from '@/shared/constants/allclimb';
+import { SEARCH_TABS } from '@/shared/constants/allclimb.constants';
 import { RoutesTree } from './ui/RoutesTree';
 import { PageDescription } from '../ui/PageDescription';
 import { Suspense } from 'react';

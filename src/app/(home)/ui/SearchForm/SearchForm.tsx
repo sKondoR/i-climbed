@@ -21,7 +21,11 @@ export default function SearchForm() {
     setQuery(value);
   };
 
-  const isNoResults = query?.trim().length >= 3 && !isLoading && !results?.places.length && !results?.sectors.length && !results?.routes.length;
+  const isNoResults =query?.trim().length >= 3
+    && !isLoading
+    && !results?.places.length
+    && !results?.sectors.length
+    && !results?.routes.length;
   return (
     <>
       <form onSubmit={handleSubmit} className="flex">
@@ -49,9 +53,8 @@ export default function SearchForm() {
           искать
         </button>
       </form>
-      <SearchResults results={results} />
-      {isError ? <div className="text-red-800">ошибка при поиске</div> : null} 
-      {isNoResults  ? <div className="text-red-800">по "{query.trim()}" ничего не найденно</div> : null}
+      {!isNoResults && results ? <SearchResults results={results} /> : <div className="text-red-800">по "{query.trim()}" ничего не найденно</div>}
+      {isError ? <div className="text-red-800">ошибка при поиске</div> : null}
     </>
   );
 }

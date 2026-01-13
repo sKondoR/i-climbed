@@ -1,4 +1,4 @@
-import { ALLCLIMB_URL } from "@/shared/constants/allclimb";
+import { ALLCLIMB_URL } from "@/shared/constants/allclimb.constants";
 import { faUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

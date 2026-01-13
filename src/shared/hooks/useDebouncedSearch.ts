@@ -1,14 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import type { FoundResults } from '../types/SearchResults.types';
-
-const initSearchValue = {
-  places: [],
-  sectors: [],
-  routes: [],
-};
+import { initialSearchResults } from '../constants/search.constants';
 
 export function useDebouncedSearch(apiFunction: (query: string, options?: any) => Promise<FoundResults>, delay = 300) {
-  const [results, setResults] = useState<FoundResults>(initSearchValue);
+  const [results, setResults] = useState<FoundResults>(initialSearchResults);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +23,7 @@ export function useDebouncedSearch(apiFunction: (query: string, options?: any) =
     }
 
     if (!query || query.trim().length < 3) {
-      setResults(initSearchValue);
+      setResults(initialSearchResults);
       setLoading(false);
       return;
     }

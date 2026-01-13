@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { FoundResults } from '../types/SearchResults.types';
+import { initialSearchResults } from '../constants/search.constants';
 
 export const useSearch = (searchTerm: string, debounceMs = 1000) => {
   const [debouncedTerm, setDebouncedTerm] = useState(searchTerm);
 
-  // Debounce the search term
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedTerm(searchTerm);
@@ -16,8 +16,8 @@ export const useSearch = (searchTerm: string, debounceMs = 1000) => {
 
   return useQuery({
     queryKey: ['search', debouncedTerm],
-    queryFn: async ({ signal }): Promise<FoundResults | []> => {
-      if (!debouncedTerm) return [];
+    queryFn: async ({ signal }): Promise<FoundResults> => {
+      if (!debouncedTerm) return initialSearchResults;
 
       const response = await fetch(`/api/search?q=${encodeURIComponent(debouncedTerm)}`, {
         signal,

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { fetchTreeNode } from '@/app/actions/fetchTreeNode';
 import { faCaretDown, faCaretRight, faSpinner, faExternalLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
+import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
 import type { RecursiveTreeProps, TreeNode } from '@/shared/types/RoutesTree.types';
 
 const TreeNodeComponent: React.FC<{

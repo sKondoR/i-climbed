@@ -1,6 +1,6 @@
 'use server';
 
-import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
+import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
 import { db } from '@/lib/db/index'; // Импорт Drizzle DB
 import { regions, places, sectors, routes, settings } from '@/lib/db/schema';
 import { preparePlaces, prepareSectors, prepareRoutes } from './scrapRoutes-utils';

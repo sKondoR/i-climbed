@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { TabGroup, Tab, TabList } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderTree, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { SEARCH_TABS } from '@/shared/constants/allclimb';
+import { SEARCH_TABS } from '@/shared/constants/allclimb.constants';
 
 // ... imports
 
