@@ -25,7 +25,7 @@ export default function Climber() {
     }, []);
 
     return (
-        <div className="absolute top-[280px] left-[-72px] w-20 h-20 text-white" ref={divRef}>
+        <div className="absolute top-[280px] left-[-70px] w-20 h-20 text-white hidden md:block" ref={divRef}>
             <div className="absolute w-[1px] h-[170px] top-[-170px] left-[24px] bg-white" ref={ropeRef}></div>
             <svg
                 width="301" height="357" viewBox="0 0 301 357" xmlns="http://www.w3.org/2000/svg"
