@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import type { FoundResults } from '../types/SearchResults';
+import type { FoundResults } from '../types/SearchResults.types';
 
 const initSearchValue = {
   places: [],

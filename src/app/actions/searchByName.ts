@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'; 
 import { places, sectors, routes } from '@/lib/db/schema'; 
-import type { FoundResults } from '@/shared/types/SearchResults';
+import type { FoundResults } from '@/shared/types/SearchResults.types';
 import { eq, ilike } from 'drizzle-orm';
 
 export async function searchByName(query: string): Promise<FoundResults | []> {

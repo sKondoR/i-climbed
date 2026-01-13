@@ -1,7 +1,7 @@
 import { getBeforeLastSlash } from '@/shared/utils/getBeforeLastSlash';
 import { AllclimbLink } from '@/shared/ui/AllclimbLink';
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb';
-import type { FoundResults } from '@/shared/types/SearchResults';
+import type { FoundResults } from '@/shared/types/SearchResults.types';
 
 export default function SearchResults({ results }: { results: FoundResults }) {
   const hasResults =

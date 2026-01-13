@@ -1,16 +1,16 @@
-interface TreeNode {
+export interface TreeNode {
   id: number;
   name: string;
   hasChildren?: boolean;
-  link?: string;
-  country?: string;
-  numroutes?: number;
+  link?: string | null;
+  country?: string | null;
+  numroutes?: number | null;
   children?: TreeNode[];
   isExpanded?: boolean;
   isLoading?: boolean;
 }
 
-interface RecursiveTreeProps {
+export interface RecursiveTreeProps {
   initialData: TreeNode[];
   onNodeClick?: (node: TreeNode) => void;
 }

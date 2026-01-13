@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import RecursiveTree from './Tree';
+import RecursiveTree from './RecursiveTree';
 import type { IRegion } from '@/lib/db/schema';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -37,7 +37,7 @@ export default function TreeWrapper() {
     link: region.link,
     country: region.country,
     hasChildren: !!region.link,
-  })) as TreeNode[];
+  }));
 
   return (
     <>
