@@ -1,6 +1,6 @@
 import { getBeforeLastSlash } from '@/shared/utils/getBeforeLastSlash';
 import { AllclimbLink } from '@/shared/ui/AllclimbLink';
-import type { FoundResults } from '@/shared/types/SearchResults.types';
+import type { FoundResults } from '@/shared/types/SearchResults';
 
 export default function SearchResults({ results }: { results: FoundResults }) {
   if (!results) return null;

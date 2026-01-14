@@ -5,7 +5,7 @@ import RecursiveTree from './RecursiveTree';
 import type { IRegion } from '@/lib/db/schema';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import type { TreeNode } from '@/shared/types/RoutesTree.types';
+import type { TreeNode } from '@/shared/types/RoutesTree';
 
 export default function TreeWrapper({ regions }: { regions: IRegion[] }) {
   const [initialTreeData, setInitialTreeData] = useState<TreeNode[]>([]);

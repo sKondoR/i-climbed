@@ -1,7 +1,7 @@
 import { db } from '@/lib/db';
 import { places, sectors, routes } from '@/lib/db/schema';
 import { initialSearchResults } from '@/shared/constants/search.constants';
-import type { FoundResults } from '@/shared/types/SearchResults.types';
+import type { FoundResults } from '@/shared/types/SearchResults';
 import { eq, ilike } from 'drizzle-orm';
 
 export class SearchService {

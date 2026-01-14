@@ -3,7 +3,7 @@
 import { RoutesService } from '@/lib/services/routes.service';
 import { SectorsService } from '@/lib/services/sectors.service';
 import { PlacesService } from '@/lib/services/places.service';
-import type { TreeNode } from '@/shared/types/RoutesTree.types';
+import type { TreeNode } from '@/shared/types/RoutesTree';
 
 const fetchTreeData = async (level: number, parentId: number | undefined) => {
   switch (level) {

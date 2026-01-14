@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import type { FoundResults } from '../types/SearchResults.types';
+import type { FoundResults } from '../types/SearchResults';
 import { initialSearchResults } from '../constants/search.constants';
 
 export function useDebouncedSearch(apiFunction: (query: string, options?: any) => Promise<FoundResults>, delay = 300) {

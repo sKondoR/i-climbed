@@ -6,7 +6,7 @@ import { fetchTreeNode } from '@/app/actions/fetchTreeNode';
 import { faCaretDown, faCaretRight, faSpinner, faExternalLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
-import type { RecursiveTreeProps, TreeNode } from '@/shared/types/RoutesTree.types';
+import type { RecursiveTreeProps, TreeNode } from '@/shared/types/RoutesTree';
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;

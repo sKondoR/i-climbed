@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import type { FoundResults } from '../types/SearchResults.types';
+import type { FoundResults } from '../types/SearchResults';
 import { initialSearchResults, MIN_SEARCH_LENGTH } from '../constants/search.constants';
 
 export const useSearch = (searchTerm: string, debounceMs = 1000) => {
