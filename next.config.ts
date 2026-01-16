@@ -7,7 +7,6 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  // swcMinify: true, // Использует SWC вместо Babel — быстрее
   // Явно отключаем webpack и разрешаем использование Turbopack,
   // но с пустой конфигурацией, чтобы подавить ошибку
   turbopack: {}, // ← это подавляет ошибку, но остаётся совместимым с webpack-плагинами в development
