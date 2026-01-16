@@ -3,21 +3,48 @@ import { useEffect, useRef } from 'react';
 export default function Climber() {
     const divRef = useRef<HTMLDivElement>(null);
     const ropeRef = useRef<HTMLDivElement>(null);
+    const svgRef = useRef<SVGSVGElement>(null);
+
+    const targetScrollY = useRef(0);
+    const animationFrameId = useRef(0);
 
     useEffect(() => {
+
         const handleScroll = () => {
-            if (!divRef.current || !ropeRef.current) return;
+            targetScrollY.current = window.scrollY;
+        };
+
+        const smoothScroll = () => {
+            if (!divRef.current || !ropeRef.current || !svgRef.current) return;
 
             const offsetTop = 280;
             const speed = 0.8;
             const scrollY = window.scrollY;
 
+            // Основная анимация позиции и длины веревки
             divRef.current.style.top = `${offsetTop + speed * scrollY}px`;
-            ropeRef.current.style.height = `${170 + speed * scrollY}px`;
-            ropeRef.current.style.top = `-${170 + speed * scrollY}px`;
+            const ropeLength = 170 + speed * scrollY;
+            ropeRef.current.style.height = `${ropeLength + 30}px`;
+            ropeRef.current.style.top = `-${ropeLength}px`;
+
+            // Добавляем эффект покачивания (вращение)
+            const swayDegrees = Math.sin(scrollY / 100) * 2 + 2; // 0-4 градуса
+            ropeRef.current.style.transform = `rotate(${swayDegrees}deg)`;
+            ropeRef.current.style.transformOrigin = '24px top'; // вращение вокруг верха верёвки
+            ropeRef.current.style.transformBox = 'fill-box';
+
+            // === Добавляем горизонтальное смещение для SVG ===
+            const swayRad = (swayDegrees * Math.PI) / 180;
+            const offsetX = ropeLength * Math.sin(swayRad); // смещение нижней точки
+
+            // Смещаем SVG относительно его текущего положения
+            svgRef.current.style.transform = `translateX(-${offsetX}px)`;
+
+            animationFrameId.current = requestAnimationFrame(smoothScroll);
         };
 
         handleScroll();
+        smoothScroll();
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -25,11 +52,21 @@ export default function Climber() {
     }, []);
 
     return (
-        <div className="absolute top-[280px] left-[-70px] w-20 h-20 text-white hidden md:block" ref={divRef}>
-            <div className="absolute w-[1px] h-[170px] top-[-170px] left-[24px] bg-white" ref={ropeRef}></div>
+        <div
+            className="absolute top-[280px] left-[-70px] w-20 h-20 text-white hidden md:block"
+            ref={divRef}
+            style={{ willChange: 'transform' }}
+        >
+            <div
+                className="absolute w-[1px] h-[175px] top-[-170px] left-[24px] bg-white"
+                ref={ropeRef}
+                style={{ willChange: 'transform' }}
+            ></div>
             <svg
                 width="301" height="357" viewBox="0 0 301 357" xmlns="http://www.w3.org/2000/svg"
                 className="w-20 h-20 fill-white"
+                ref={svgRef}
+                style={{ willChange: 'transform' }}
             >
                 <path fillRule="evenodd" clipRule="evenodd"
                     d="M85.8097 5.57764L81.0167 4.70124L77.7037 6.65624C74.0747 8.79722 72.7087 12.2443 73.8097 16.4842C74.9127 20.7322 76.1507 39.8794 76.2427 54.1312L76.3267 67.0462L73.1997 75.1312C68.3607 87.6411 64.6867 95.3782 61.7627 99.2112C61.7627 99.2112 47.1475 112.409 46.8377 112.668C40.0997 118.141 33.4587 123.959 32.0807 125.596C29.3177 128.88 28.9438 130.735 26.8868 151.372C26.0018 160.247 24.8418 166.752 23.7788 168.81C20.6578 174.844 7.17677 196.187 5.01177 198.522C0.645508 199.826 -4.35403 221.826 6.64576 203.826C-1.35491 228.527 13.6454 221.826 13.6454 221.826L17.7788 211.216L19.3028 207.125C21.4958 201.238 33.1452 184.826 33.1452 184.826C36.4627 177.436 37.4295 175.067 41.5095 168.201C44.0095 156.701 46.1475 143.523 46.5095 143.523C46.8725 143.523 60.2987 158.15 63.2367 161.125C66.1747 164.1 72.7837 169.387 77.9227 172.875L87.2667 179.216L87.2967 181.723C87.3127 183.101 86.8898 185.753 86.3558 187.615L85.3847 191.001L88.4767 194.905C90.2287 197.117 94.1167 200.096 97.4477 201.777L103.327 204.745V208.73V212.716H104.767C105.707 212.716 106.314 211.421 106.517 208.983L106.827 205.25L113.865 203.902L120.903 202.554L126.578 205.064L132.253 207.573L132.847 209.942L133.442 212.31L114.884 255.716C106.8 288.324 94.7999 288.324 96.3267 301.996C96.3267 305.44 112.148 304.717 118.148 326.217C119.317 326.217 123.148 325.217 123.148 321.217C123.148 321.217 123.371 312.518 121.3 307.324C119.476 302.751 114.884 294.324 114.884 294.324L136.309 257.553L160.726 207.216L160.776 203.039C160.84 197.759 158.121 193.869 152.529 191.242C150.218 190.156 148.327 188.977 148.327 188.623C148.327 188.268 149.79 187.73 151.577 187.428C153.364 187.125 160.684 186.845 167.009 185.701C160.959 186.795 173.334 184.558 167.009 185.701C173.059 184.607 183.278 179.756 185.052 179.748C187.098 179.74 195.766 188.14 225.109 201.137C250.56 212.41 272.596 221.635 274.078 221.637C275.56 221.639 279.327 222.954 280.858 221.637L283.358 217.749C283.358 217.749 287.908 213.821 291.358 212.249C295.888 210.185 303.858 209.749 303.858 209.749V206.509C296.858 200.249 276.358 206.249 270.858 206.509C268.775 203.999 196.213 157.942 190.826 156.735L186.279 155.716L175.053 157.724C181.103 156.588 168.879 158.828 175.053 157.724C153.644 161.743 141.709 164.423 130.671 158.829C123.83 155.361 113.327 146.021 113.327 143.404C113.327 142.287 112.671 140.648 111.868 139.762C109.625 137.283 103.091 105.084 103.816 100.081L104.415 95.9472L102.796 94.3282C98.6428 90.1753 88.4557 27.6781 89.9707 15.6492L90.5457 11.0822L88.1777 8.32924L85.8097 5.57624V5.57764C86.1344 -1.85939 86.1423 -1.85904 85.8097 5.57764ZM46.8272 62.7169C39.8272 60.7169 29.8272 59.217 19.3272 69.2169C8.54922 83.7348 10.3272 100.717 35.3272 110.717L37.8272 107.165H42.8267L46.8377 112.668L61.7627 99.2112L56.3272 94.7169L57.8267 86.2162L57.3272 80.2153L54.7827 74.5522C49.8767 67.5653 39.8272 67.7169 46.8272 62.7169ZM90.8988 78.3572C84.4418 94.9031 79.3507 109.073 79.7277 109.45C80.8217 110.545 92.2117 100.526 94.0147 96.8832L95.9457 92.9782L94.5607 86.1232C93.7987 82.3523 92.8257 78.6442 92.3997 77.8822L91.6247 76.4972L90.8988 78.3572ZM88.3777 108.313C84.4437 111.391 81.3597 114.251 81.5257 114.667C82.4887 117.089 99.2348 131.489 101.602 131.931L104.377 132.448L103.916 130.832C103.663 129.943 102.223 123.254 100.717 115.966C99.0038 107.679 97.5197 102.716 96.7547 102.716C96.0817 102.716 92.3127 105.235 88.3777 108.313Z"
