@@ -18,6 +18,7 @@ export default function TreeWrapper({ regions }: { regions: IRegion[] }) {
       country: region.country,
       hasChildren: !!region.link,
     }));
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialTreeData(data);
   }, [regions]);
 

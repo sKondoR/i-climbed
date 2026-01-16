@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 const useGlobalTime = (interval = 200) => {
+  // eslint-disable-next-line react-hooks/purity
   const [time, setTime] = useState(Date.now());
 
   useEffect(() => {

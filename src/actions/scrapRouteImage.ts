@@ -1,5 +1,6 @@
 'use server';
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
+// eslint-disable-next-line no-restricted-imports
 import { chromium as plChromium } from 'playwright';
 import { removeLastUrlSegment } from '@/shared/utils/removeLastUrlSegment';
 import { ImagesService } from '@/lib/services/images.service';
@@ -9,6 +10,7 @@ import { images, type IImage, type IRoute } from '@/lib/db/schema';
 import { getImageFormat } from './scrapRoutes-utils';
 
 // require важно на vercel 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const chromium = require('@sparticuz/chromium');
 
 export async function scrapRouteImage(route: IRoute, isUpdate: boolean): Promise<IImage> {

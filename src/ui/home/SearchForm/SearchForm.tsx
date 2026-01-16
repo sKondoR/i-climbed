@@ -30,9 +30,9 @@ export default function SearchForm() {
     && term.trim() === query.trim()
     && !isError
     && !isLoading
-    && !results?.places.length
-    && !results?.sectors.length
-    && !results?.routes.length;
+    && !results?.places?.length
+    && !results?.sectors?.length
+    && !results?.routes?.length;
   return (
     <>
       <form onSubmit={handleSubmit} className="flex">
@@ -69,7 +69,7 @@ export default function SearchForm() {
         </button>
       </form>
       {results ? <SearchResults results={results} /> : null} 
-      {isNoResults ? <div className="text-red-800 mt-1 text-sm">по "{query.trim()}" ничего не найдено</div> : null}
+      {isNoResults ? <div className="text-red-800 mt-1 text-sm">по &quot;{query.trim()}&rdquo; ничего не найдено</div> : null}
       {isError ? <div className="text-red-800 mt-1 text-sm">ошибка при поиске</div> : null}
     </>
   );

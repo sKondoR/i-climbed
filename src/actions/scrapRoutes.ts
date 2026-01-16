@@ -1,8 +1,8 @@
 'use server';
 
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
-import { db } from '@/lib/db/index'; // Импорт Drizzle DB
-import { regions, places, sectors, routes, settings } from '@/lib/db/schema';
+import { db } from '@/lib/db/index';
+import { regions, places, sectors, routes } from '@/lib/db/schema';
 import { preparePlaces, prepareSectors, prepareRoutes } from './scrapRoutes-utils';
 import chunkArray from '@/shared/utils/chunkArray';
 import { formatDuration } from '@/shared/utils/formatDuration';
@@ -14,7 +14,6 @@ interface FetchErrors {
   places: string[];
   sectors: string[];
 }
-
 export async function scrapRoutes() {
   try {
     const startTime = new Date();
@@ -36,8 +35,8 @@ export async function scrapRoutes() {
           const text = await response.text();
           try {
             data = text ? JSON.parse(text) : {};
-          } catch (e) {
-            console.log('JSON.parse(text) error: ', text);
+          } catch (err) {
+            console.log('JSON.parse(text) error: ', err);
           }
         }
       } catch (e) {
@@ -54,7 +53,7 @@ export async function scrapRoutes() {
     // Получаем регионы
     const { data: { result } } = await getApiResponse(`${ALLCLIMB_URL}/ru/guides/`);
     let loadedRegions: (typeof regions.$inferInsert)[] = result
-      ? result.map((el: any) => ({
+      ? result.map((el: { [key: string]: unknown; }) => ({
           uniqId: `${el.country}/${el.name}`,
           name: el.name,
           country: el.country,
@@ -89,6 +88,7 @@ export async function scrapRoutes() {
         const regionPlaces = preparePlaces(data, region.id!, region.uniqId);
         loadedPlaces.push(...(regionPlaces as IPlace[]));
       } catch (err) {
+        console.log('error: ', err);
         fetchErrors.regions.push(region.name);
       }
     });
@@ -114,9 +114,12 @@ export async function scrapRoutes() {
           try {
             const { data } = await getApiResponse(`${ALLCLIMB_URL}${place.link}`);
             const placeSectors = prepareSectors(data, place.id, place.uniqId);
-            loadedSectors.push(...placeSectors);
+            if (Array.isArray(placeSectors)) {
+              loadedSectors.push(...placeSectors);
+            }
             console.log('загрузка мест, секторов: ', loadedSectors.length);
           } catch (err) {
+            console.log('error: ', err);
             fetchErrors.places.push(place.name);
           }
 
@@ -147,6 +150,7 @@ export async function scrapRoutes() {
             sectorRoutes = await db.insert(routes).values(sectorRoutes).returning();
             loadedRoutes.push(...sectorRoutes);
           } catch (err) {
+            console.log('error: ', err);
             fetchErrors.sectors.push(sector.name);
           }
           console.log('загрузка секторов, трасс: ', loadedRoutes.length);

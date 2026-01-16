@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { places } from '@/lib/db/schema';
-import { and, eq, ilike, asc } from 'drizzle-orm';
+import { and, eq, asc } from 'drizzle-orm';
 
 export type PlaceFilters = Partial<{
   regionId: number;

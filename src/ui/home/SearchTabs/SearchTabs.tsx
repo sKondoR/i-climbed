@@ -7,19 +7,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderTree, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { SEARCH_TABS } from '@/shared/constants/allclimb.constants';
 
-// ... imports
-
 export default function SearchTabs() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const tab = searchParams.get('search');
+
+  let tab: string = SEARCH_TABS[0];
+  if (searchParams) {
+    tab = searchParams.get('search') || SEARCH_TABS[0];
+  }
 
   // Determine index based on tab value
   const selectedIndex = tab === SEARCH_TABS[1] ? 1 : 0;
 
   const handleTabClick = (value: string) => {
-    const newParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams(searchParams?.toString());
     newParams.set('search', value);
     router.push(`${pathname}?${newParams.toString()}`);
   };
@@ -27,11 +29,11 @@ export default function SearchTabs() {
   // Sync default tab if no search param
   useEffect(() => {
     if (!tab) {
-      const newParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams(searchParams?.toString());
       newParams.set('search', SEARCH_TABS[0]);
       router.replace(`${pathname}?${newParams.toString()}`);
     }
-  }, [tab, pathname, router]);
+  }, [tab, pathname, router, searchParams]);
 
   const tabClasses = "px-3 py-1 md:py-3 md:px-5 cursor-pointer select-none text-center focus-visible:outline-none";
 

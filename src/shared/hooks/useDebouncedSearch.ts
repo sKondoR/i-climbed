@@ -2,7 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import type { FoundResults } from '../types/SearchResults';
 import { initialSearchResults } from '../constants/search.constants';
 
-export function useDebouncedSearch(apiFunction: (query: string, options?: any) => Promise<FoundResults>, delay = 300) {
+interface SearchOptions {
+  signal?: AbortSignal;
+}
+
+export function useDebouncedSearch(apiFunction: (query: string, options?: SearchOptions) => Promise<FoundResults>, delay = 300) {
   const [results, setResults] = useState<FoundResults>(initialSearchResults);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

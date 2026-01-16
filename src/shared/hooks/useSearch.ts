@@ -22,9 +22,9 @@ export const useSearch = (searchTerm: string, debounceMs = 1000) => {
       const response = await fetch(`/api/search?q=${encodeURIComponent(debouncedTerm)}`, {
         signal,
       });
-
       if (!response.ok) throw new Error('Network response was not ok');
-      return response.json();
+      const data = await response.json()
+      return data;
     },
     enabled: debouncedTerm.trim().length >= MIN_SEARCH_LENGTH,
     staleTime: 1000 * 10,

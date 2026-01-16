@@ -1,6 +1,7 @@
 import { getBeforeLastSlash } from '@/shared/utils/getBeforeLastSlash';
 import { AllclimbLink } from '@/shared/ui/AllclimbLink';
 import type { FoundResults } from '@/shared/types/SearchResults';
+import Link from 'next/link';
 
 export default function SearchResults({ results }: { results: FoundResults }) {
   if (!results) return null;
@@ -20,7 +21,7 @@ export default function SearchResults({ results }: { results: FoundResults }) {
                 <li key={`route-${route.id}`}>
                     <div className="flex">
                       <div className="grow">
-                        <a href={`/routes/${route.id}`} className="cursor-pointer text-cyan-700 hover:text-pink-700">{route.name}</a>
+                        <Link href={`/routes/${route.id}`} className="cursor-pointer text-cyan-700 hover:text-pink-700">{route.name}</Link>
                       </div>
                       <AllclimbLink href={route.sectorLink} />
                     </div>

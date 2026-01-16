@@ -2,11 +2,31 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
-import { fetchTreeNode } from '@/app/actions/fetchTreeNode';
 import { faCaretDown, faCaretRight, faSpinner, faExternalLink } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
 import type { RecursiveTreeProps, TreeNode } from '@/shared/types/RoutesTree';
+
+const getNode = async (level: number, parentId: number) => {
+  try {
+    const response = await fetch('/api/tree-node', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      body: JSON.stringify({ level, parentId }),
+    });
+    if (response.status !== 200) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    console.log('error: ', e);
+    throw new Error(`Ошибка при загрузке node дерева: ${e}`);
+  }
+};
 
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
@@ -17,7 +37,7 @@ const TreeNodeComponent: React.FC<{
   const [children, setChildren] = useState<TreeNode[]>(node.children || []);
   const [isLoading, setIsLoading] = useState(false);
   
-    const handleToggle = useCallback(async (e: React.MouseEvent) => {
+  const handleToggle = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsLoading(true);
     
@@ -32,7 +52,7 @@ const TreeNodeComponent: React.FC<{
     // Only fetch if expanding and no children are loaded yet
     if (newIsExpanded && !children.length && node.hasChildren && node.link) {
       try {
-        const fetchedChildren = await fetchTreeNode(level, node.id);
+        const fetchedChildren = await getNode(level, node.id);
         setChildren((fetchedChildren || []) as TreeNode[]);
       } catch (error) {
         console.error('Ошибка загрузки данных node:', error);
@@ -109,7 +129,7 @@ const RecursiveTree: React.FC<RecursiveTreeProps> = ({
   const [nodes, setNodes] = useState<TreeNode[]>(initialData);
 
   // Helper function to update nodes recursively
-    const updateNodeInTree = (
+  const updateNodeInTree = (
     nodes: TreeNode[],
     nodeId: number,
     updates: Partial<TreeNode>

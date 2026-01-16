@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { routes } from '@/lib/db/schema';
-import { and, eq, ilike, asc } from 'drizzle-orm';
+import { and, eq, asc } from 'drizzle-orm';
 
 export type RouteFilters = Partial<{
   sectorId: number;

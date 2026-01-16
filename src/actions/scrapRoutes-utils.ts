@@ -10,7 +10,12 @@ const extractNumRoutes = (str: string | number): number => {
     return match ? parseInt(match[1], 10) : 0;
 };
 
-export const preparePlaces = (data: { result?: any[]; }, id: number, uniqId: string ) => {
+interface Results {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+export const preparePlaces = (data: { result?: Results[]; }, id: number, uniqId: string ) => {
   if (!data?.result) {
     console.log('preparePlaces error: ', data, id, uniqId);
   }
@@ -47,7 +52,7 @@ export const preparePlaces = (data: { result?: any[]; }, id: number, uniqId: str
   : [];
 };
 
-export const prepareSectors = (data: { result?: any[]; }, id: number, uniqId: string ) => Array.isArray(data?.result)
+export const prepareSectors = (data: { result?: Results[]; }, id: number, uniqId: string ) => Array.isArray(data?.result)
   ? data.result.reduce((acc, el) => {
 
       const numroutes = extractNumRoutes(el.numroutes);
@@ -76,8 +81,9 @@ export const prepareSectors = (data: { result?: any[]; }, id: number, uniqId: st
     }, [] as ISector[])
   : [];
 
-  export const prepareRoutes = (data: { images?: any }, id: number, uniqId: string ) => Array.isArray(data?.images)
+  export const prepareRoutes = (data: { images?: Results }, id: number, uniqId: string ) => Array.isArray(data?.images)
   ? data.images.reduce((acc, image) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       image?.Routes?.forEach((r: any) => {
         // Проверяем, есть ли уже элемент с таким именем
         const existingIndex = acc.findIndex((item: IRoute) => item.name === r.name && Number(item.sectorId) === id);
@@ -112,5 +118,6 @@ export function getImageFormat(url: string): 'jpg' | 'jpeg' | 'JPG' | 'JPEG' | n
   const ext = match[1];
   const validFormats: Array<'jpg' | 'jpeg' | 'JPG' | 'JPEG'> = ['jpg', 'jpeg', 'JPG', 'JPEG'];
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return validFormats.includes(ext as any) ? (ext as 'jpg' | 'jpeg' | 'JPG' | 'JPEG') : null;
 }

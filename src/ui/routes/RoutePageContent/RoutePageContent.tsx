@@ -1,32 +1,57 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { lazy, useCallback, useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import type { IImage, IRoute } from '@/lib/db/schema';
-import { scrapRouteImage } from '@/app/actions/scrapRouteImage';
-import { EditImage } from '@/shared/ui/EditImage';
 import { PageDescription } from '@/ui/layout/PageDescription';
 
 import { getBeforeLastSlash } from '@/shared/utils/getBeforeLastSlash';
 import { getRegionFromRouteUniqId } from '@/shared/utils/getRegionFromRouteUniqId';
 import { AllclimbLink } from '@/shared/ui/AllclimbLink';
 import { RouteBadge } from '@/shared/ui/RouteBadge';
+import { ClientOnly } from '@/shared/ui/ClientOnly';
 
-export default function RoutePageContent({ route }: { route: IRoute }) {
+const LazyMFEditImage = lazy(async () => {
+  try {
+    const EditImage = await import('microfrontend/EditImage');
+    return EditImage;
+  } catch (error) {
+    console.error('Failed to load remote EditImage:', error);
+    return {
+      default: () => <div>Failed to load remote EditImage</div>,
+    };
+  }
+});
+
+export default function RoutePageContent({ route }: { route?: IRoute }) {
 
   const [image, setImage] = useState<IImage | null>(null);
-
-  const loadImage = async (isUpdate: boolean) => {
+  const loadImage = useCallback(async (isUpdate: boolean) => {
+    if (!route) {
+      return;
+    }
     try {
-      const img = await scrapRouteImage(route, isUpdate);
+      const response = await fetch('/api/image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ route, isUpdate }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка: ${response.statusText}`);
+      }
+
+      const img: IImage = await response.json();
       setImage(img);
     } catch (error) {
       console.error('Ошибка загрузки изображения:', error);
     }
-  }
+  }, [route]);
 
   const reloadImage = () => {
     setImage(null);
@@ -36,7 +61,7 @@ export default function RoutePageContent({ route }: { route: IRoute }) {
   useEffect(() => {
     if (!route) return;
     loadImage(false);
-  }, [route]);
+  }, [route, loadImage]);
 
   if (!route) {
     return (<div className="mt-3">
@@ -51,7 +76,7 @@ export default function RoutePageContent({ route }: { route: IRoute }) {
         <PageDescription>
           {route?.grade ? <div><RouteBadge grade={route.grade} /></div> : null}
           <div className="grow ml-3">
-            <h2 className="inline text-2xl md:text-3xl text-pink-700">{route?.name}</h2> {route?.type?.toLowerCase()} <AllclimbLink href={route.sectorLink} />
+            <h2 className="inline text-2xl md:text-3xl text-pink-700">{route?.name}</h2> {route?.type?.toLowerCase()} <AllclimbLink href={route?.sectorLink || ''} />
             <div>{getBeforeLastSlash(route?.uniqId)}</div>
             <div>{route?.length}</div>
           </div>
@@ -63,16 +88,14 @@ export default function RoutePageContent({ route }: { route: IRoute }) {
               className={`text-cyan-700 animate-spin`}
             /> загрузка изображения
           </> : null}
-          {route?.grade && route?.uniqId && image?.imageData ? 
-            <div>
-              <EditImage
-                imgSrc={`data:image/png;base64,${image.imageData}`}
-                name={route.name}
-                region={getRegionFromRouteUniqId(route.uniqId)}
-                grade={route.grade}
-              />
-            </div>
-          : image?.error}
+          {route?.grade && route?.uniqId && image?.imageData && LazyMFEditImage && <ClientOnly>
+            <LazyMFEditImage
+              imgSrc={`data:image/png;base64,${image.imageData}`}
+              name={route.name}
+              region={getRegionFromRouteUniqId(route.uniqId)}
+              grade={route.grade}
+            />
+          </ClientOnly>}
         </div>
         {image?.imageData ? <div className="flex justify-center mt-3">
           <button
