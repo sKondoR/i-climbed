@@ -6,7 +6,7 @@
     "dev": "cross-env NEXT_PRIVATE_LOCAL_WEBPACK=true next dev",
     "build": "next build",
     "postinstall": "npx playwright install chromium",
-    "vercel-build": "npm install && npx playwright install --with-deps chromium && next build",
+    "vercel-build": "npm install && npx playwright install --with-deps chromium && NEXT_PRIVATE_LOCAL_WEBPACK=true next build",
     "start": "next start",
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
