@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
       remotes: {
         // microfrontend: 'microfrontend@http://localhost:3001/_next/static/chunks/remoteEntry.js',
         // Продакшен (по необходимости):
-        microfrontend: `microfrontend@https://edit-route-image-mf.vercel.app/_next/static/chunks/remoteEntry.js?__t=${Date.now()}`,
+        microfrontend: `microfrontend@https://i-climbed-card.vercel.app/_next/static/chunks/remoteEntry.js?__t=${Date.now()}`,
       },
       shared: {
         // react: {
