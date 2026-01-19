@@ -71,7 +71,7 @@ const TreeNodeComponent: React.FC<{
   const padY = level === 0 ? 'py-1' : '';
   return (
     <div className={`tree-node ${nodeBg} ${padX}`}>
-      {isFirstOfCountry && (<div className="text-xl text-ceal-800 mt-1">{node.country}</div>)}
+      {isFirstOfCountry && (<div className="text-xl text-pink-700 pt-1">{node.country}</div>)}
       <div
         className={`flex cursor-pointer items-start ${padY}`}
         style={{ 
