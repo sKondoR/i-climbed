@@ -8,6 +8,7 @@ export interface TreeNode {
   children?: TreeNode[];
   isExpanded?: boolean;
   isLoading?: boolean;
+  countries?: string[];
 }
 
 export interface RecursiveTreeProps {

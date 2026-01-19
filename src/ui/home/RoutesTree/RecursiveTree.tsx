@@ -32,7 +32,9 @@ const TreeNodeComponent: React.FC<{
   node: TreeNode;
   level: number;
   onToggleExpand?: (nodeId: number, isExpanded: boolean) => void;
-}> = ({ node, level, onToggleExpand }) => {
+  countries?: string[];
+  isFirstOfCountry?: boolean;
+}> = ({ node, level, onToggleExpand, countries, isFirstOfCountry }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [children, setChildren] = useState<TreeNode[]>(node.children || []);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,10 +66,14 @@ const TreeNodeComponent: React.FC<{
 
   const hasChildren = node.hasChildren || children.length > 0;
 
+  const nodeBg = level === 0 && node.country && countries ? (countries.indexOf(node.country) % 2 ? '' : 'bg-white/50') : '';
+  const padX = level === 0 ? 'px-3 md:px-6' : '';
+  const padY = level === 0 ? 'py-1' : '';
   return (
-    <div className="tree-node">
+    <div className={`tree-node ${nodeBg} ${padX}`}>
+      {isFirstOfCountry && (<div className="text-xl text-ceal-800 mt-1">{node.country}</div>)}
       <div
-        className="flex cursor-pointer items-start"
+        className={`flex cursor-pointer items-start ${padY}`}
         style={{ 
           paddingLeft: `${level* 24}px`,
         }}
@@ -92,7 +98,6 @@ const TreeNodeComponent: React.FC<{
         )}
         
         <span>
-          {node.country && `${node.country} - `}
           {level < 3
             ? <>
               {node.name} 
@@ -162,9 +167,6 @@ const RecursiveTree: React.FC<RecursiveTreeProps> = ({
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
       }
-      .node-content:hover {
-        background-color: #f5f5f5;
-      }
     `;
     document.head.appendChild(style);
     
@@ -173,14 +175,21 @@ const RecursiveTree: React.FC<RecursiveTreeProps> = ({
     };
   }, []);
 
+  const countries = [...new Set(
+    nodes
+      .map(node => node.country)
+      .filter((country): country is string => typeof country === 'string')
+  )];
   return (
-    <div className="recursive-tree" style={{ fontFamily: 'Arial, sans-serif' }}>
-      {nodes.map((node) => (
+    <div className="recursive-tree -mx-3 md:-mx-6" style={{ fontFamily: 'Arial, sans-serif' }}>
+      {nodes.map((node, index) => (
         <TreeNodeComponent
+          isFirstOfCountry={nodes.findIndex(({ country }) => country === node.country) === index}
           key={node.id}
           node={node}
           level={0}
           onToggleExpand={handleToggleExpand}
+          countries={countries}
         />
       ))}
     </div>

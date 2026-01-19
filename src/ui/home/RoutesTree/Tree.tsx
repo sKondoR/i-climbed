@@ -17,7 +17,13 @@ export default function TreeWrapper({ regions }: { regions: IRegion[] }) {
       link: region.link,
       country: region.country,
       hasChildren: !!region.link,
-    }));
+    })).sort((a, b) => {
+      // Prioritize Россия first
+      if (a.country === 'Россия' && b.country !== 'Россия') return -1;
+      if (a.country !== 'Россия' && b.country === 'Россия') return 1;
+      // Otherwise sort alphabetically by country
+      return a.country.localeCompare(b.country);
+    });
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setInitialTreeData(data);
   }, [regions]);

@@ -17,7 +17,7 @@ export const regions = pgTable('regions', {
   id: serial('id').primaryKey(),
   uniqId: varchar('uniq_id', { length: 255 }).notNull(),
   name: varchar('name', { length: 255 }).notNull(),
-  country: varchar('country', { length: 255 }),
+  country: varchar('country', { length: 255 }).notNull(),
   season: varchar('season', { length: 255 }),
   link: text('link').notNull(),
 });
