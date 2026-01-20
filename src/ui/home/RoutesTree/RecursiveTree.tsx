@@ -159,29 +159,13 @@ const RecursiveTree: React.FC<RecursiveTreeProps> = ({
     );
   }, []);
 
-  // Add animation styles
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
   const countries = [...new Set(
     nodes
       .map(node => node.country)
       .filter((country): country is string => typeof country === 'string')
   )];
   return (
-    <div className="recursive-tree -mx-3 md:-mx-6" style={{ fontFamily: 'Arial, sans-serif' }}>
+    <div className="recursive-tree -mx-3 md:-mx-6">
       {nodes.map((node, index) => (
         <TreeNodeComponent
           isFirstOfCountry={nodes.findIndex(({ country }) => country === node.country) === index}

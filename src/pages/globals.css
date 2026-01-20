@@ -37,6 +37,11 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 i.fas, i.far, i.fal {
   font-size: 1em;
 }
