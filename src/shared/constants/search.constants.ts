@@ -1,3 +1,10 @@
+export const HOME = '/?search=query';
+
+export const SEARCH_TABS=[
+    'query',
+    'region'
+];
+
 export const initialSearchResults = {
   places: [],
   sectors: [],

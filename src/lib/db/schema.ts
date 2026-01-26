@@ -3,12 +3,8 @@ import {
   serial,
   varchar,
   text,
-  // timestamp,
-  // boolean,
   integer,
   jsonb,
-  // primaryKey,
-  // uniqueIndex
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
@@ -100,7 +96,7 @@ export const images = pgTable('images', {
 export const imageRelations = relations(images, ({ one }) => ({
   routes: one(routes, {
     fields: [images.routeId],
-    references: [routes.uniqId], // or [route.id] depending on your reference
+    references: [routes.uniqId],
   }),
 }));
 
@@ -119,7 +115,7 @@ export interface IScrapStats {
   scrapDuration?: string;
 }
 
-// Define the settings table
+// settings table
 export const settings = pgTable('settings', {
   id: serial('id').primaryKey(),
   scrapStats: jsonb('scrapStats').$type<IScrapStats>(),
@@ -127,7 +123,6 @@ export const settings = pgTable('settings', {
 
 export type ISettings = typeof settings.$inferSelect;
 
-// Export schema object
 export const schema = {
   regions,
   places,

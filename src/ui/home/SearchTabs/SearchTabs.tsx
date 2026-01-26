@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { TabGroup, Tab, TabList } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderTree, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import { SEARCH_TABS } from '@/shared/constants/allclimb.constants';
+import { SEARCH_TABS } from '@/shared/constants/search.constants';
 
 export default function SearchTabs() {
   const pathname = usePathname();

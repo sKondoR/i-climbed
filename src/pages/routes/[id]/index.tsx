@@ -9,7 +9,7 @@ import { HeaderPanel } from '@/ui/layout/HeaderPanel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Climber } from '@/ui/layout/Climber';
 import Link from 'next/link';
-import { HOME } from '@/shared/constants/allclimb.constants';
+import { HOME } from '@/shared/constants/search.constants';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import Layout from '@/pages/layout';
 import { RoutePageContent } from '@/ui/routes/RoutePageContent';

@@ -8,7 +8,7 @@ import { HeaderPanel } from '@/ui/layout/HeaderPanel';
 import { SearchTabs } from '@/ui/home/SearchTabs';
 import { Climber } from '@/ui/layout/Climber';
 import type { IRegion } from '@/lib/db/schema';
-import { SEARCH_TABS } from '@/shared/constants/allclimb.constants';
+import { SEARCH_TABS } from '@/shared/constants/search.constants';
 import { PageDescription } from '@/ui/layout/PageDescription';
 import { SearchForm } from '@/ui/home/SearchForm';
 import { RoutesTree } from '@/ui/home/RoutesTree';

@@ -14,7 +14,7 @@ export class SearchService {
   
     try {
       const [foundPlaces, foundSectors, foundRoutes] = await Promise.all([
-        // Search in places
+        // поиск по местам
         db
           .select({
             id: places.id,
@@ -25,7 +25,7 @@ export class SearchService {
           .from(places)
           .where(ilike(places.name, searchTerm)),
   
-        // Search in sectors
+        // поиск по секторам
         db
           .select({
             id: sectors.id,
@@ -36,7 +36,7 @@ export class SearchService {
           .from(sectors)
           .where(ilike(sectors.name, searchTerm)),
   
-        // Search in routes + join sector for link
+        // поиск по трассам + объединение для ссылки
         db
           .select({
             id: routes.id,

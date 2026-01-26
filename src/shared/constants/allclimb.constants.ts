@@ -1,12 +1,5 @@
 export const ALLCLIMB_URL = 'https://www.allclimb.com';
-export const ALLCLIMB_SEARCH = 'https://www.allclimb.com/new_search_for';
-
-export const HOME = '/?search=query';
-
-export const SEARCH_TABS=[
-    'query',
-    'region'
-];
+export const ALLCLIMB_SEARCH = `${ALLCLIMB_URL}/new_search_for`;
 
 export const DIFFICULTY = [
     '4a', '4a+', '4b', '4b+', '4c', '4c+',

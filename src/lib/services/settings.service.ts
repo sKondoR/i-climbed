@@ -10,6 +10,7 @@ export class SettingsService {
       .orderBy(asc(settings.id));
   }
 
+  // последнее значение
   static async findLast(): Promise<ISettings | undefined> {
     const result = await db
       .select()
