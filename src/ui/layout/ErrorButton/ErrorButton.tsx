@@ -21,8 +21,8 @@ export default function ErrorButton({
   return (
     <button
       type="button"
-      className={`rounded-md px-7 py-2 font-bold bg-cyan-800 text-white hover:text-white transition-colors
-        hover:bg-pink-800 focus:outline-none cursor-pointer
+      className={`rounded-md px-7 py-2 font-bold border-2 border-cyan-7s00 text-cyan-700 hover:text-white transition-colors
+        hover:bg-cyan-700 hover:border-white focus:outline-none cursor-pointer
         disabled:opacity-50 disabled:cursor-not-allowed
       `}
       onClick={handleOnClick}

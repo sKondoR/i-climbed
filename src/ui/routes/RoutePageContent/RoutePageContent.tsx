@@ -126,7 +126,8 @@ export default function RoutePageContent({ route }: { route?: IRoute }) {
         {image?.imageData ? <div className="flex justify-center mt-3">
           <button
             type="button"
-            className="rounded-md px-7 py-2 font-bold bg-cyan-800 text-white hover:text-white transition-colors hover:bg-pink-800 focus:outline-none cursor-pointer"
+            className={`rounded-md px-7 py-2 font-bold border-2 border-cyan-700 text-cyan-700 hover:text-white transition-colors
+        hover:bg-cyan-700 hover:border-white focus:outline-none cursor-pointer`}
             onClick={reloadImage}
           >
             обновить изображение
