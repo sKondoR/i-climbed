@@ -33,7 +33,6 @@ const HomePage = ({
   regions,
   search,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  if (!regions.length) return null;
   const isFirstTab = !search || search === SEARCH_TABS[0];
   return (
     <>
@@ -42,8 +41,9 @@ const HomePage = ({
           <PageDescription>
             <div className="w-full text-right">поиск трасс, секторов и регионов с Allclimb</div>
           </PageDescription>
+          {!regions.length && <div className="text-red-700 text-center">Нет данных о регионах с AllClimb, обновите базу...</div>}
           {isFirstTab
-            ?  <SearchForm />
+            ? <SearchForm />
             : <RoutesTree regions={regions} />
           }
         </div>

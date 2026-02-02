@@ -8,10 +8,12 @@ export default function ScrapStats() {
     revalidateOnMount: true,
   });
 
+  let errorText = !data?.scrapStats ? 'Нет занных о загрузке с AllClimb...' : 'Ошибка загрузки данных';
+
   if (!data?.scrapStats) {
     return (
       <div className="p-5 text-white/50 text-sm relative z-20">
-        {error ? 'Ошибка загрузки' : 'Загрузка...'}
+        {error ? errorText : 'Загрузка...'}
       </div>
     );
   }

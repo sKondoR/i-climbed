@@ -28,6 +28,8 @@ export default function TreeWrapper({ regions }: { regions: IRegion[] }) {
     setInitialTreeData(data);
   }, [regions]);
 
+  if (!regions.length) return '';
+
   if (initialTreeData.length === 0) {
     return (
       <div className="text-center">
