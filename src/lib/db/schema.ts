@@ -123,6 +123,17 @@ export const settings = pgTable('settings', {
 
 export type ISettings = typeof settings.$inferSelect;
 
+// errors table
+export const errors = pgTable('errors', {
+  id: serial('id').primaryKey(),
+  type: text('type'),
+  text: text('text'),
+  url: text('url'),
+  created: text('created'),
+});
+
+export type IError = typeof errors.$inferSelect;
+
 export const schema = {
   regions,
   places,
@@ -130,6 +141,7 @@ export const schema = {
   routes,
   images,
   settings,
+  errors,
   placesRelations,
   sectorsRelations,
   routesRelations,

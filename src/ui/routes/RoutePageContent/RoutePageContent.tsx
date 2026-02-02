@@ -63,6 +63,31 @@ export default function RoutePageContent({ route }: { route?: IRoute }) {
     loadImage(false);
   }, [route, loadImage]);
 
+  const reportError = useCallback(async () => {
+    if (!route?.sectorLink) {
+      return;
+    }
+    try {
+      const response = await fetch('/api/report-error', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'image',
+          url: route?.sectorLink,
+          text: `ошибка загрузки изображения трассы: ${route?.name}`
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ошибка: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error('Ошибка отправки ошибки:', error);
+    }
+  }, [route]);
+
   if (!route) {
     return (<div className="mt-3">
       <PageDescription>
@@ -107,6 +132,13 @@ export default function RoutePageContent({ route }: { route?: IRoute }) {
           </button>
         </div>
         : null}
+        {route?.sectorLink && (<div className="flex justify-center mt-3"><button
+          type="button"
+          className="rounded-md px-7 py-2 font-bold bg-cyan-800 text-white hover:text-white transition-colors hover:bg-pink-800 focus:outline-none cursor-pointer"
+          onClick={reportError}
+        >
+          сообщить об ошибке загрузки изображения
+        </button></div>)}
       </div>
     </>
   );
