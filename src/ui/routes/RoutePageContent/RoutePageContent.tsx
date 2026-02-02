@@ -13,6 +13,7 @@ import { getRegionFromRouteUniqId } from '@/shared/utils/getRegionFromRouteUniqI
 import { AllclimbLink } from '@/shared/ui/AllclimbLink';
 import { RouteBadge } from '@/shared/ui/RouteBadge';
 import { ClientOnly } from '@/shared/ui/ClientOnly';
+import { ErrorButton } from '@/ui/layout/ErrorButton';
 
 const LazyMFEditImage = lazy(async () => {
   try {
@@ -132,13 +133,12 @@ export default function RoutePageContent({ route }: { route?: IRoute }) {
           </button>
         </div>
         : null}
-        {route?.sectorLink && (<div className="flex justify-center mt-3"><button
-          type="button"
-          className="rounded-md px-7 py-2 font-bold bg-cyan-800 text-white hover:text-white transition-colors hover:bg-pink-800 focus:outline-none cursor-pointer"
+        {route?.sectorLink && (<div className="flex justify-center mt-3">
+          <ErrorButton
           onClick={reportError}
-        >
-          сообщить об ошибке загрузки изображения
-        </button></div>)}
+          title="сообщить об ошибке загрузки изображения"
+          />
+        </div>)}
       </div>
     </>
   );
