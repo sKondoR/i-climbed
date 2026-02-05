@@ -57,8 +57,6 @@ RoutePage.getLayout = function getLayout(page: ReactElement) {
             {page}
           </div>
         </div>
-        {/* <div className="w-8 h-8 flex-wrap bg-pink-700"></div>
-        <div className="w-1/2 h-1/2"></div> */}
     </Layout>
   )
 }
