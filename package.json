@@ -29,8 +29,8 @@
     "playwright": "^1.57.0",
     "playwright-core": "^1.57.0",
     "postcss": "^8.5.6",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "reflect-metadata": "^0.2.2",
     "swr": "^2.3.8",
     "typeorm": "^0.3.28"
