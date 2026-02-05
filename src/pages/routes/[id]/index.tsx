@@ -1,5 +1,3 @@
-// import { notFound } from 'next/navigation';
-
 import { RoutesService } from '@/lib/services/routes.service';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import type { IRoute } from '@/lib/db/schema';

@@ -54,10 +54,10 @@ try {
     
     const page = await context.newPage();
 
-      // Блокировка ресурсов для ускорения
+      // Блокировка ресурсов для ускорения ['image', 'stylesheet', 'font', 'media']
       await page.route('**/*', (route) => {
         const resourceType = route.request().resourceType();
-        const blockedResources: string[] = []; // ['image', 'stylesheet', 'font', 'media'];
+        const blockedResources: string[] = [];
         if (blockedResources?.includes(resourceType)) {
           route.abort();
         } else {
@@ -155,7 +155,6 @@ try {
   } finally {
     if (browser) {
       await browser.close();
-      // await closeDataSource();
     }
   }
 }

@@ -50,7 +50,6 @@ export function useDebouncedSearch(apiFunction: (query: string, options?: Search
         } else {
           setError('An unexpected error occurred');
         }
-      } finally {
       }
     }, delay);
   };

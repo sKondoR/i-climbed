@@ -2,7 +2,6 @@
 
 import { Suspense, type ReactElement } from 'react';
 import Layout from './layout';
-// import type { NextPageWithLayout } from './_app';
 import { AnimatedTitle } from '@/ui/layout/AnimatedTitle';
 import { HeaderPanel } from '@/ui/layout/HeaderPanel';
 import { SearchTabs } from '@/ui/home/SearchTabs';
