@@ -37,6 +37,28 @@ const getNode = async (level: number, parentId: number): Promise<TreeNode[]> => 
   }
 };
 
+const ToggleButton: React.FC<{
+  isExpanded: boolean;
+  isLoading: boolean;
+  handleToggle: (e: React.MouseEvent) => void;
+}> = ({
+  isExpanded,
+  isLoading,
+  handleToggle
+}) => (<button
+  type="button"
+  onClick={handleToggle}
+  disabled={isLoading}
+  className="w-6 cursor-pointer hover:text-orange-500 focus:outline-none" 
+  aria-label={isExpanded ? 'Свернуть' : 'Развернуть'}
+>
+  {isLoading ? (
+    <FontAwesomeIcon icon={faSpinner} className="animate-spin text-gray-800" />
+  ) : (
+    <FontAwesomeIcon icon={isExpanded ? faCaretDown : faCaretRight} />
+  )}
+</button>);
+
 const TreeNodeComponent: React.FC<{
   node: TreeNode;
   level: number;
@@ -87,19 +109,11 @@ const TreeNodeComponent: React.FC<{
         style={{ paddingLeft }}
       >
         {isExpandable ? (
-          <button
-            type="button"
-            onClick={handleToggle}
-            disabled={isLoading}
-            className="w-6 cursor-pointer hover:text-orange-500 focus:outline-none" 
-            aria-label={isExpanded ? 'Свернуть' : 'Развернуть'}
-          >
-            {isLoading ? (
-              <FontAwesomeIcon icon={faSpinner} className="animate-spin text-gray-800" />
-            ) : (
-              <FontAwesomeIcon icon={isExpanded ? faCaretDown : faCaretRight} />
-            )}
-          </button>
+          <ToggleButton 
+            isExpanded={isExpanded}
+            isLoading={isLoading}
+            handleToggle={handleToggle}
+          />
         ) : (
           <div className="w-6" />
         )}

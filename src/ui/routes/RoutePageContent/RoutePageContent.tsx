@@ -27,7 +27,11 @@ const LazyMFEditImage = lazy(async () => {
   }
 });
 
-export default function RoutePageContent({ route }: { route?: IRoute }) {
+interface RoutePageContentProps {
+  route?: IRoute
+}
+
+export default function RoutePageContent({ route }: Readonly<RoutePageContentProps>) {
 
   const [image, setImage] = useState<IImage | null>(null);
   const loadImage = useCallback(async (isUpdate: boolean) => {
@@ -97,50 +101,48 @@ export default function RoutePageContent({ route }: { route?: IRoute }) {
     </div>);
   }
   return (
-    <>
-      <div className="mt-3">
-        <PageDescription>
-          {route?.grade ? <div><RouteBadge grade={route.grade} /></div> : null}
-          <div className="grow ml-3">
-            <h2 className="inline text-2xl md:text-3xl text-pink-700">{route?.name}</h2> {route?.type?.toLowerCase()} <AllclimbLink href={route?.sectorLink || ''} />
-            <div>{getBeforeLastSlash(route?.uniqId)}</div>
-            <div>{route?.length}</div>
-          </div>
-        </PageDescription>
-        <div className="flex justify-center">
-          {route && !image ? <>
-            <FontAwesomeIcon size="lg"
-              icon={faSpinner}
-              className={`text-cyan-700 animate-spin`}
-            /> загрузка изображения
-          </> : null}
-          {route?.grade && route?.uniqId && image?.imageData && LazyMFEditImage && <ClientOnly>
-            <LazyMFEditImage
-              imgSrc={`data:image/png;base64,${image.imageData}`}
-              name={route.name}
-              region={getRegionFromRouteUniqId(route.uniqId)}
-              grade={route.grade}
-            />
-          </ClientOnly>}
+    <div className="mt-3">
+      <PageDescription>
+        {route?.grade ? <div><RouteBadge grade={route.grade} /></div> : null}
+        <div className="grow ml-3">
+          <h2 className="inline text-2xl md:text-3xl text-pink-700">{route?.name}</h2> {route?.type?.toLowerCase()} <AllclimbLink href={route?.sectorLink || ''} />
+          <div>{getBeforeLastSlash(route?.uniqId)}</div>
+          <div>{route?.length}</div>
         </div>
-        {image?.imageData ? <div className="flex justify-center mt-3">
-          <button
-            type="button"
-            className={`rounded-md px-7 py-2 font-bold border-2 border-cyan-700 text-cyan-700 hover:text-white transition-colors
-        hover:bg-cyan-700 hover:border-white focus:outline-none cursor-pointer`}
-            onClick={reloadImage}
-          >
-            обновить изображение
-          </button>
-        </div>
-        : null}
-        {route?.sectorLink && (<div className="flex justify-center mt-3">
-          <ErrorButton
-          onClick={reportError}
-          title="сообщить об ошибке загрузки изображения"
+      </PageDescription>
+      <div className="flex justify-center">
+        {route && !image ? <>
+          <FontAwesomeIcon size="lg"
+            icon={faSpinner}
+            className={`text-cyan-700 animate-spin`}
+          /> загрузка изображения
+        </> : null}
+        {route?.grade && route?.uniqId && image?.imageData && LazyMFEditImage && <ClientOnly>
+          <LazyMFEditImage
+            imgSrc={`data:image/png;base64,${image.imageData}`}
+            name={route.name}
+            region={getRegionFromRouteUniqId(route.uniqId)}
+            grade={route.grade}
           />
-        </div>)}
+        </ClientOnly>}
       </div>
-    </>
+      {image?.imageData ? <div className="flex justify-center mt-3">
+        <button
+          type="button"
+          className={`rounded-md px-7 py-2 font-bold border-2 border-cyan-700 text-cyan-700 hover:text-white transition-colors
+      hover:bg-cyan-700 hover:border-white focus:outline-none cursor-pointer`}
+          onClick={reloadImage}
+        >
+          обновить изображение
+        </button>
+      </div>
+      : null}
+      {route?.sectorLink && (<div className="flex justify-center mt-3">
+        <ErrorButton
+        onClick={reportError}
+        title="сообщить об ошибке загрузки изображения"
+        />
+      </div>)}
+    </div>
   );
 }

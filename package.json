@@ -1,6 +1,6 @@
 {
-  "name": "allclimb-route-images",
-  "version": "0.1.0",
+  "name": "i-climbed",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "cross-env NEXT_PRIVATE_LOCAL_WEBPACK=true next dev",
