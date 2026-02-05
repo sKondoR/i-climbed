@@ -30,7 +30,7 @@ export async function scrapRoutes() {
       let data;
       try {
         if (response.status !== 200) {
-          throw `${response.status} ${response.statusText}`;
+          throw new Error(`Failed to parse response as JSON: ${response.status} ${response.statusText}`);
         } else {
           const text = await response.text();
           try {

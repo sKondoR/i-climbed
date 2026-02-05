@@ -7,7 +7,7 @@ const extractNumRoutes = (str: string | number): number => {
         return str;
     }
     const match = str?.match(/<b>(\d+)<\/b>/);
-    return match ? parseInt(match[1], 10) : 0;
+    return match ? Number.parseInt(match[1], 10) : 0;
 };
 
 interface Results {
