@@ -31,4 +31,6 @@ export const GRADES_COLORS: Record<string, string> = {
     '9c': '#9810fa',    // purple-600
 };
 
+export const PROEKT_COLOR = '#000000';
+
 export const GRADES = Object.keys(GRADES_COLORS);
