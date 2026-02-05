@@ -43,4 +43,6 @@ next-env.d.ts
 
 drizzle
 
+# sonar
 sonar-project.properties
+.scannerwork

@@ -26,7 +26,7 @@ export const getServerSideProps = (async (context) => {
   }
 
   const routeId = Number(id);
-  if (isNaN(routeId)) {
+  if (Number.isNaN(routeId)) {
     return { props: {} };
   }
 

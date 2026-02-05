@@ -1,3 +1,3 @@
 export const removeTags = (text?: string) => {
-    return text?.replace(/<[^>]*>/g, '');
+    return text?.replaceAll(/<[^>]*>/g, '');
 };

@@ -91,6 +91,10 @@ const EditImage = ({
     setTextPosition({ isTop: top, isRight: right });
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <>
     <div className="flex flex-wrap justify-center mb-3 mt-1 items-center" >
@@ -105,16 +109,24 @@ const EditImage = ({
         </div>
         <div className="flex flex-wrap rounded-md w-8 h-8 border-2 border-cyan-700 overflow-hidden transition-shadow mr-5">
           <div className={`w-1/2 h-1/2 ${p.isTop && !p.isRight ? 'bg-pink-700' : 'cursor-pointer hover:bg-cyan-700'}`}
+            role="button"
             onClick={onTextPositionClick(true, false)}
+            onKeyDown={handleKeyDown}
           ></div>
           <div className={`w-1/2 h-1/2 ${p.isTop && p.isRight ? 'bg-pink-700' : 'cursor-pointer hover:bg-cyan-700'}`}
+            role="button"
             onClick={onTextPositionClick(true, true)}
+            onKeyDown={handleKeyDown}
           ></div>
           <div className={`w-1/2 h-1/2 ${!p.isTop && !p.isRight ? 'bg-pink-700' : 'cursor-pointer hover:bg-cyan-700'}`}
+            role="button"
             onClick={onTextPositionClick(false, false)}
+            onKeyDown={handleKeyDown}
           ></div>
           <div className={`w-1/2 h-1/2 ${!p.isTop && p.isRight ? 'bg-pink-700' : 'cursor-pointer hover:bg-cyan-700'}`}
+            role="button"
             onClick={onTextPositionClick(false, true)}
+            onKeyDown={handleKeyDown}
           ></div>
         </div>
         <div className="mr-5">

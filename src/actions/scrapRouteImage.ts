@@ -58,7 +58,7 @@ try {
       await page.route('**/*', (route) => {
         const resourceType = route.request().resourceType();
         const blockedResources: string[] = []; // ['image', 'stylesheet', 'font', 'media'];
-        if (blockedResources.includes(resourceType)) {
+        if (blockedResources?.includes(resourceType)) {
           route.abort();
         } else {
           route.continue();
