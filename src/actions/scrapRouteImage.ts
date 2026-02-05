@@ -57,8 +57,8 @@ try {
       // Блокировка ресурсов для ускорения ['image', 'stylesheet', 'font', 'media']
       await page.route('**/*', (route) => {
         const resourceType = route.request().resourceType();
-        const blockedResources: string[] = [];
-        if (blockedResources?.includes(resourceType)) {
+        const blockedResources: string[] = ['font', 'media'];
+        if (blockedResources.length && blockedResources.includes(resourceType)) {
           route.abort();
         } else {
           route.continue();

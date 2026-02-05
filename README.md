@@ -36,7 +36,7 @@ NextJS, React, Tanstack React Query, Drizzle ORM, TailwindCSS, Playwright
 
 ## Sonar Cube (local)
 - install: npm install -g sonar-scanner
-- install java: winget install EclipseAdoptium.Temurin.17.JDK
+- install java: winget install EclipseAdoptium.Temurin.21.JDK
 - run on docker: docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:latest
 - set SONAR_TOKEN in .env
 - run: .\scan.ps1
