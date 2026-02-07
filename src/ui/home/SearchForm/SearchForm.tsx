@@ -6,6 +6,7 @@ import { faSearch, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { SearchResults } from '../SearchResults';
 import { useSearch } from '@/shared/hooks/useSearch';
 import { MIN_SEARCH_LENGTH } from '@/shared/constants/search.constants';
+import DOMPurify from 'dompurify';
 
 
 export default function SearchForm() {
@@ -19,7 +20,8 @@ export default function SearchForm() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setQuery(value);
+    const sanitizedValue = DOMPurify.sanitize(value);
+    setQuery(sanitizedValue);
   };
 
   const handleClearInput = () => {
@@ -69,7 +71,7 @@ export default function SearchForm() {
         </button>
       </form>
       {results ? <SearchResults results={results} /> : null} 
-      {isNoResults ? <div className="text-red-800 mt-1 text-sm">по &quot;{query.trim()}&rdquo; ничего не найдено</div> : null}
+      {isNoResults ? <div className="text-red-800 mt-1 text-sm">по &quot;{query.trim()}&quot; ничего не найдено</div> : null}
       {isError ? <div className="text-red-800 mt-1 text-sm">ошибка при поиске</div> : null}
     </>
   );
