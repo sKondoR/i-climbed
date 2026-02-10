@@ -34,7 +34,7 @@ I Climbed проект создан для скалолазов, которые 
 ## Стэк
 NextJS, React, Tanstack React Query, Drizzle ORM, TailwindCSS, Playwright
 
-## Sonar Cube (local)
+## SonarQube (local)
 - install: npm install -g sonar-scanner
 - install java: winget install EclipseAdoptium.Temurin.21.JDK
 - run on docker: docker run -d --name sonarqube -p 9000:9000 -p 9092:9092 sonarqube:latest
