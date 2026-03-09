@@ -35,6 +35,7 @@ export default function SearchForm() {
     && !results?.places?.length
     && !results?.sectors?.length
     && !results?.routes?.length;
+  const btnDisabled = query?.trim().length < MIN_SEARCH_LENGTH;
   return (
     <>
       <form onSubmit={handleSubmit} className="flex">
@@ -65,7 +66,11 @@ export default function SearchForm() {
 
         <button
           type="submit"
-          className="rounded-md px-7 py-2 font-bold bg-cyan-700 text-white hover:text-white transition-colors hover:bg-pink-800 focus:outline-none cursor-pointer"
+          className={`rounded-md px-7 py-2 font-bold text-white hover:text-white
+            transition-colors focus:outline-none
+            ${btnDisabled ? 'bg-cyan-700/30' : 'bg-cyan-700 hover:bg-pink-800 cursor-pointer'}
+          `}
+          disabled={btnDisabled}
         >
           искать
         </button>

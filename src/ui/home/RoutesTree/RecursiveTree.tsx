@@ -6,6 +6,7 @@ import { faCaretDown, faCaretRight, faSpinner, faExternalLink } from '@fortaweso
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
 import type { RecursiveTreeProps, TreeNode } from '@/shared/types/RoutesTree';
+import { RouteBadge } from '@/shared/ui/RouteBadge';
 
 // Кэширование загруженных узлов для избежания повторных запросов
 const nodeCache = new Map<string, TreeNode[]>();
@@ -121,7 +122,7 @@ const TreeNodeComponent: React.FC<{
         <span>
           {level < 3
             ? (<>
-              {node.name} 
+              <span onClick={handleToggle} className="cursor-pointers">{node.name}</span>
               {node.numroutes !== undefined ? <span className="text-gray-500 text-sm ml-2">({node.numroutes})</span> : null}
               {node.link 
               ? <a
@@ -133,9 +134,12 @@ const TreeNodeComponent: React.FC<{
                   <FontAwesomeIcon icon={faExternalLink} />
                 </a> : null}
               </>)
-            : <Link href={`/routes/${node.id}`} className="text-blue-800 hover:text-orange-800">
-                {node.name}
-              </Link>
+            : <>
+                  <Link href={`/routes/${node.id}`} className="text-blue-800 hover:text-orange-800 mr-2">
+                    {node.name}
+                  </Link>
+                  <RouteBadge grade={node.grade} isText />
+              </>
             }
         </span>
       </div>
@@ -150,6 +154,14 @@ const TreeNodeComponent: React.FC<{
               onToggleExpand={onToggleExpand}
             />
           ))}
+        </div>
+      )}
+      {isExpanded && hasChildren && !children.length && (
+        <div
+        className="text-gray-700"
+          style={{ marginLeft: `${(level +1) * 24}px`}}
+        >
+          нет данных
         </div>
       )}
     </div>

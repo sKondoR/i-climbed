@@ -1,6 +1,7 @@
 export interface TreeNode {
   id: number;
   name: string;
+  grade?: string;
   hasChildren?: boolean;
   link?: string | null;
   country?: string | null;

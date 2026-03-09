@@ -4,6 +4,7 @@ import { RoutesService } from '@/lib/services/routes.service';
 import { SectorsService } from '@/lib/services/sectors.service';
 import { PlacesService } from '@/lib/services/places.service';
 import type { TreeNode } from '@/shared/types/RoutesTree';
+import type { IRoute } from '@/lib/db/schema';
 
 const fetchTreeData = async (level: number, parentId: number | undefined) => {
   switch (level) {
@@ -20,14 +21,26 @@ const fetchTreeData = async (level: number, parentId: number | undefined) => {
 
 export async function fetchTreeNode(level: number, parentId?: number): Promise<TreeNode[]> {
   const data = await fetchTreeData(level, parentId);
-  const preparedData = data.map((el) => ({
-    id: el.id,
-    uniqId: el.uniqId,
-    name: el.name,
-    link: el.link,
-    numroutes: 'numroutes' in el ? el.numroutes : null,
-    hasChildren: !!el.link,
-  }));
+  const preparedData = data.map((el) => {
+    const baseNode = {
+      id: el.id,
+      uniqId: el.uniqId,
+      name: el.name,
+      grade: (el as IRoute).grade || undefined,
+      link: el.link,
+      numroutes: 'numroutes' in el ? el.numroutes : null,
+      hasChildren: !!el.link,
+    };
+
+    if (level === 2 && 'grade' in el) {
+      return {
+        ...baseNode,
+        grade: (el as IRoute).grade || undefined,
+      };
+    }
+
+    return baseNode;
+  });
   return preparedData;
 }
 
