@@ -156,7 +156,7 @@ const TreeNodeComponent: React.FC<{
           ))}
         </div>
       )}
-      {isExpanded && hasChildren && !children.length && (
+      {isExpanded && hasChildren && !isLoading && !children.length && (
         <div
         className="text-gray-700"
           style={{ marginLeft: `${(level +1) * 24}px`}}
