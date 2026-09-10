@@ -41,6 +41,7 @@
       ]
     },
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": true

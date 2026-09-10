@@ -1,7 +1,8 @@
 'use server'
 
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { createPool } from '@vercel/postgres';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
+
 import * as schema from './schema';
 
 const connectionString = process.env.POSTGRES_URL;
@@ -10,7 +11,7 @@ console.log('connectionString', process.env.POSTGRES_URL);
 if (!connectionString) {
   throw new Error('POSTGRES_URL is required');
 }
-const pool = createPool({
+const pool =  new Pool({
   connectionString,
   max: 30,
   idleTimeoutMillis: 30000,

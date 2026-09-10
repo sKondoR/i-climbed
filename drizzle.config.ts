@@ -8,10 +8,7 @@ export default {
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.POSTGRES_URL!,
-    ssl:  process.env.NODE_ENV === "production"
-      ? undefined
-      : { rejectUnauthorized: false },
+    url: process.env.MIGRATION_POSTGRES_URL!
   },
 } satisfies Config;
 

@@ -21,7 +21,21 @@ type HomePageProps = {
 }
 
 export const getServerSideProps = (async (context) => {
+  console.log('🔄 Attempting to fetch regions...');
   const regions = await RegionsService.find();
+  console.log('✅ Regions fetched successfully:', regions.length, 'items');
+  // const regions = [{ id: 1, name: 'Test Region', uniqId: '1', country: '', season: '', link: '' }]; // Example region
+
+  if (!Array.isArray(regions)) {
+    console.error('RegionsService.find() did not return an array:', regions);
+    return {
+      props: {
+        regions: [],
+        search: typeof context.query.search === 'string' ? context.query.search : null,
+      },
+    };
+  }
+
   return { props: {
     regions,
     search: typeof context.query.search === 'string' ? context.query.search : null
