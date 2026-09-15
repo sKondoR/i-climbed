@@ -2,8 +2,8 @@
 
 import { ALLCLIMB_URL } from '@/shared/constants/allclimb.constants';
 import { db } from '@/lib/db/index';
-import { migrateToRemote } from '@/lib/db/migrate';
 import { regions, places, sectors, routes } from '@/lib/db/schema';
+import { migrateToRemote } from '@/actions/migrateLocalToRemoteDB';
 import { count } from 'drizzle-orm';
 import { preparePlaces, prepareSectors, prepareRoutes } from './scrapRoutes-utils';
 import chunkArray from '@/shared/utils/chunkArray';
@@ -33,6 +33,8 @@ async function resetTables() {
 }
 
 export async function scrapRoutes() {
+  migrateToRemote();
+  return;
   try {
     const startTime = new Date();
 
@@ -45,7 +47,7 @@ export async function scrapRoutes() {
           'X-Requested-With': 'XMLHttpRequest',
         },
         // body: JSON.stringify({ data: '' }),
-        body: 'act=eyJ2IjoxfQ:1x4ZAU:MwNZg_kGfSnBcEzb8mFCwLPg6ekaAZaWE3Z-4GzFMaU',
+        body: 'act=eyJ2IjoxfQ:1x5FAp:XC_Eq-nZCxJF9efQNO5e-GykbEWmk98oxm5XGTNDwYc',
       });
       let data;
       try {
@@ -184,7 +186,7 @@ export async function scrapRoutes() {
 
           // если уже есть сектора для этого места - пропускаем
           // console.log(`placesCountsMap[${place.id}]: `, placesCountsMap[place.id]);
-          if (placesCountsMap[place.id] !== undefined) return;
+          if (placesCountsMap[place.id] !== undefined || !place.numroutes) return;
 
           try {
             const { data } = await getApiResponse(`${ALLCLIMB_URL}${place.link}`);
@@ -196,7 +198,7 @@ export async function scrapRoutes() {
             console.log('error: ', err);
             fetchErrors.places.push(place.link);
           }
-          console.log(`загрузка места ${place.link}, загруженно секторов: `, loadedSectors.length);
+          console.log(`загрузка места ${place.link}, загруженно секторов: ${loadedSectors.length}/${place.numroutes}`);
           await new Promise((resolve) => setTimeout(resolve, randomDelay()));
         })
       );
@@ -212,15 +214,31 @@ export async function scrapRoutes() {
     const totalSectors = await db.select().from(sectors);
     console.log('секторов в базе: ', totalSectors.length);
 
-
     // Загрузка маршрутов
-    const sectorsChunks = chunkArray(loadedSectors, BATCH_SIZE);
+    const sectorsChunks = chunkArray(totalSectors, BATCH_SIZE);
+    const sectorCounts = await db
+      .select({
+        sectorId: routes.sectorId,
+        count: count(routes.id).as('count')
+      })
+      .from(routes)
+      .groupBy(routes.sectorId);
+
+    const sectorCountsMap = sectorCounts.reduce<Record<string, number>>((acc, item) => {
+      acc[item.sectorId + ''] = item.count;
+      return acc;
+    }, {});
     const loadedRoutes: IRoute[] = [];
 
     for (const sectorsChunk of sectorsChunks) {
       await Promise.all(
         sectorsChunk.map(async (sector) => {
           if (!sector.link) return;
+
+          if (fetchErrors.sectors.length > MAX_ERRORS) return;
+
+          // если уже есть трассы для этого сектора - пропускаем
+          if (!sector.numroutes || sectorCountsMap[sector.id] >= sector.numroutes) return;
 
           try {
             const { data } = await getApiResponse(`${ALLCLIMB_URL}${sector.link}`);
@@ -233,12 +251,15 @@ export async function scrapRoutes() {
             console.log('error: ', err);
             fetchErrors.sectors.push(sector.link);
           }
-          console.log('загрузка трасс, загруженно: ', loadedRoutes.length);
+          console.log(`загрузка трасс сектора ${sector.link}, загруженно: `, loadedRoutes.length);
           await new Promise((resolve) => setTimeout(resolve, randomDelay()));
         })
       );
       // await new Promise((resolve) => setTimeout(resolve, 300));
     }
+
+    const totalRoutes = await db.select().from(routes);
+    console.log('трасс в базе: ', totalRoutes.length);
 
     // Обновление статистики
     const endTime = new Date();
@@ -249,12 +270,11 @@ export async function scrapRoutes() {
       placesErrors: fetchErrors.places.length,
       sectors: totalSectors.length,
       sectorsErrors: fetchErrors.sectors.length,
-      routes: loadedRoutes.length,
+      routes: totalRoutes.length,
       scrapDate: endTime.toLocaleDateString('ru-RU'),
       scrapDuration: formatDuration(startTime, endTime),
     };
 
-    migrateToRemote();
 
     console.log(`
       ошибки загрузки данных для регионов: ${stats.regionsErrors} из ${stats.regions}

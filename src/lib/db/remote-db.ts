@@ -1,7 +1,7 @@
 'use server'
 
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { createPool } from '@vercel/postgres';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Pool } from 'pg';
 import * as schema from './schema';
 
 const connectionString = process.env.REMOTE_POSTGRES_URL;
@@ -10,16 +10,25 @@ console.log('connectionString', process.env.REMOTE_POSTGRES_URL);
 if (!connectionString) {
   throw new Error('REMOTE_POSTGRES_URL is required');
 }
-const pool = createPool({
+const poolRemote = new Pool({
   connectionString,
-  max: 30,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 30000,
+  max: 3,                         // was 5 — headroom under the server cap
+  min: 1,                         // keep one warm socket
+  idleTimeoutMillis: 30_000,      // was 5_000 — stop reaping mid-loop
+  connectionTimeoutMillis: 30_000,// was 10_000 — allow cold-start wake
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10_000,
+  allowExitOnIdle: true,
+
 });
+
+poolRemote.on('error', (err) => console.error('poolRemote error:', err));
+poolRemote.on('remove', () => console.log(`poolRemote remove @ ${Date.now()}`));
+poolRemote.on('connect', () => console.log(`poolRemote connect @ ${Date.now()}`));
 
 async function testConnection() {
   try {
-    await pool.connect();
+    await poolRemote.connect();
     console.log('✅ Remote Database connected successfully');
   } catch (error) {
     console.error('❌ Remote Database connection failed:', error);
@@ -29,7 +38,7 @@ async function testConnection() {
 
 testConnection().catch(console.error);
 
-export const remoteDd = drizzle(pool, { schema });
+export const remoteDd = drizzle(poolRemote, { schema });
 
 // For server actions
 export async function getDb() {
