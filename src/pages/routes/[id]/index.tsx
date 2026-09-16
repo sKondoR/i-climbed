@@ -52,7 +52,7 @@ RoutePage.getLayout = function getLayout(page: ReactElement) {
           </Link>
         </HeaderPanel>    
         <Climber />
-        <div className="bg-white/60 backdrop-blur-md rounded-sm shadow-2xl transition-all duration-300 hover:shadow-3xl relative z-2">
+        <div className="bg-white/60 backdrop-blur-md rounded-sm shadow-2xl transition-all duration-300 hover:shadow-2xl relative z-2">
           <div className="border-white/30 rounded-sm py-4 px-3 md:px-6 md:py-6 hover:border-white/50 transition-colors overflow-hidden">
             {page}
           </div>

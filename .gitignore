@@ -46,3 +46,6 @@ drizzle
 # sonar
 sonar-project.properties
 .scannerwork
+
+AGENTS.md
+BUGS.md

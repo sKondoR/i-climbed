@@ -1,7 +1,7 @@
 'use server'
 
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
+import { Pool, type PoolClient } from 'pg';
 import * as schema from './schema';
 
 const connectionString = process.env.REMOTE_POSTGRES_URL;
@@ -27,12 +27,17 @@ poolRemote.on('remove', () => console.log(`poolRemote remove @ ${Date.now()}`));
 poolRemote.on('connect', () => console.log(`poolRemote connect @ ${Date.now()}`));
 
 async function testConnection() {
+  let client: PoolClient | undefined;
+
   try {
-    await poolRemote.connect();
+    client = await poolRemote.connect();
     console.log('✅ Remote Database connected successfully');
   } catch (error) {
     console.error('❌ Remote Database connection failed:', error);
     throw error;
+  } finally {
+    // Return the client to the pool, otherwise every call leaks a connection until the pool is exhausted
+    client?.release();
   }
 }
 

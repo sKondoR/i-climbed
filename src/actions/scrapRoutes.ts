@@ -33,8 +33,6 @@ async function resetTables() {
 }
 
 export async function scrapRoutes() {
-  migrateToRemote();
-  return;
   try {
     const startTime = new Date();
 
@@ -138,7 +136,7 @@ export async function scrapRoutes() {
             loadedPlaces.push(...(regionPlaces as IPlace[]));            
           } catch (err) {
             console.log('error: ', err);
-            fetchErrors.places.push(region.link);
+            fetchErrors.regions.push(region.link);
           }
           console.log(`загрузка региона ${region.link}, загруженно мест: `, loadedPlaces.length);
           await new Promise((resolve) => setTimeout(resolve, randomDelay()));

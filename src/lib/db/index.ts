@@ -1,13 +1,12 @@
 'use server'
 
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
+import { Pool, type PoolClient } from 'pg';
 
 import * as schema from './schema';
 
 const connectionString = process.env.POSTGRES_URL;
 
-console.log('connectionString', process.env.POSTGRES_URL);
 if (!connectionString) {
   throw new Error('POSTGRES_URL is required');
 }
@@ -19,12 +18,17 @@ const pool =  new Pool({
 });
 
 async function testConnection() {
+  let client: PoolClient | undefined;
+
   try {
-    await pool.connect();
+    client = await pool.connect();
     console.log('✅ Database connected successfully');
   } catch (error) {
     console.error('❌ Database connection failed:', error);
     throw error;
+  } finally {
+    // Return the client to the pool, otherwise every call leaks a connection until the pool is exhausted
+    client?.release();
   }
 }
 

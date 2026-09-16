@@ -11,7 +11,7 @@ export default function Document() {
           flex flex-col items-center
         `}
       >
-        <div className="w-full mins-w-screen grow p-3 md:p-15 relative z-10">
+        <div className="w-full min-w-screen grow p-3 md:p-15 relative z-10">
           <Main />
         </div>        
         <NextScript />

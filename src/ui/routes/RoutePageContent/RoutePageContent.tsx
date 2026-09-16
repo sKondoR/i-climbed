@@ -119,7 +119,7 @@ export default function RoutePageContent({ route }: Readonly<RoutePageContentPro
         </> : null}
         {route?.grade && route?.uniqId && image?.imageData && LazyMFEditImage && <ClientOnly>
           <LazyMFEditImage
-            imgSrc={`data:image/png;base64,${image.imageData}`}
+            imgSrc={`data:image/jpeg;base64,${image.imageData}`}
             name={route.name}
             region={getRegionFromRouteUniqId(route.uniqId)}
             grade={route.grade}
