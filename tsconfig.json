@@ -24,24 +24,13 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@/app/*": [
-        "src/app_1/*"
-      ],
-      "@/lib/*": [
-        "src/lib/*"
-      ],
-      "@/shared/*": [
-        "src/shared/*"
-      ],
-      "@/ui/*": [
-        "src/ui/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/app/*": ["./src/app_1/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/ui/*": ["./src/ui/*"]
     },
-    "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": true
